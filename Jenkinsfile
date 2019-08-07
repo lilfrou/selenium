@@ -15,12 +15,6 @@ stages {
                
         }
     }  
-     stage('test JUNIT') {
-             steps {
-              sh "mvn -Dtest=additiontest test"
-               
-        }
-    }  
          stage('selenium') {
             steps {
                 sh "mvn clean test -DsuiteXmlFile=testng.xml"
