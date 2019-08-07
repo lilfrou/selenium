@@ -1,16 +1,16 @@
 package myproject;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 
 public class additiontest {
 	@Test
 	public void testAdd() {
-	assertEquals(3, addition.add(1, 2));
+	AssertJUnit.assertEquals(3, addition.add(1, 2));
 	}
 	public void testDiv() {
-	assertEquals(1, addition.div(3, 2));
+		 AssertJUnit.assertEquals(1, addition.div(3, 2));
+		 }
 		 }
 
-}
+
