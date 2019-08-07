@@ -30,7 +30,7 @@ stages {
 }
     post {
         always {
-            step([$class: 'Publisher', reportFilenamePattern: '**/testng-results.xml'])
+            
             junit '**/junitreports/*.xml'
         }
 }
