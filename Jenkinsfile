@@ -20,6 +20,14 @@ stages {
                 sh "mvn clean test -DsuiteXmlFile=testng.xml"
               
             }   
+             post {
+
+  always {
+    cobertura coberturaReportFile: '*/.xml'
+    }
+}
+
+
       }   
 }
     post {
