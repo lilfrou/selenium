@@ -18,7 +18,7 @@ stages {
          stage('selenium') {
             steps {
                 sh "mvn clean test -DsuiteXmlFile=testng.xml"
-              cobertura:cobertura 
+              sh"cobertura:cobertura" 
             }   
              post {
 
