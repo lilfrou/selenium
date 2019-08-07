@@ -12,6 +12,7 @@ stages {
     stage('compile stage') {
              steps {
               sh "mvn clean compile"
+                 sh "mvn clean install sonar:sonar"
                
         }
     }  
