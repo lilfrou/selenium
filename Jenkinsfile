@@ -31,7 +31,7 @@ stages {
     post {
         always {
             
-            junit '**/reports/junit/*.xml'
+             junit '**/junitreports/*.xml'
         }
 }
 }
