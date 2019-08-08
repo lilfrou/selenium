@@ -11,7 +11,7 @@ stages {
         }
     stage('compile stage') {
              steps {
-              sh "mvn package"
+              sh "mvn clean compile"
                  
                
         }
