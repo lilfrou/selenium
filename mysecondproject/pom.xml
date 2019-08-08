@@ -8,6 +8,7 @@
   <groupId>mysecondproject</groupId>
   <artifactId>mysecondproject</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
   <dependencies>
   <dependency>
     <groupId>org.seleniumhq.selenium</groupId>
