@@ -3,6 +3,9 @@
   <groupId>myproject</groupId>
   <artifactId>myproject</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <modules>
+    <module>mysecondproject</module>
+  </modules>
   <dependencies>
   <dependency>
     <groupId>org.seleniumhq.selenium</groupId>
