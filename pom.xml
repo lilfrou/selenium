@@ -5,7 +5,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
-    <modules>myproject</module>
+    <module>myproject</module>
     <module>mysecondproject</module>
   </modules>
   <reporting>
