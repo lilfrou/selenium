@@ -3,6 +3,7 @@
   <groupId>myproject</groupId>
   <artifactId>myproject</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
   <modules>
     <module>mysecondproject</module>
   </modules>
