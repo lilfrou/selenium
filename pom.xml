@@ -25,29 +25,7 @@
             </plugin>
         </plugins>
     </reporting>
-<build>
-<plugins>
-        <plugin>
-                 <groupId>org.jacoco</groupId>
-                 <artifactId>jacoco-maven-plugin</artifactId>
-                 <version>0.8.2</version>
-                    <execution>
-	                        <id>merge</id>
-	                        <goals>
-	                            <goal>merge</goal>
-	                        </goals>
-	                        <configuration>
-	                            <fileSets>
-	                                <fileSet implementation="org.apache.maven.shared.model.fileset.FileSet">
-	                                    <directory>${project.basedir}</directory>
-	                                    <includes>
-	                                        <include>**/*.exec</include>
-	                                    </includes>
-	                                </fileSet>
-	                            </fileSets>
-	                        </configuration>
-	                    </execution>
-
+<build>    
      <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
