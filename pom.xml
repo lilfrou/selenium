@@ -55,6 +55,7 @@
                             <goal>cobertura</goal>
                         </goals>
                     </execution>
+                  
                 </executions>
             </plugin>
 </plugins>
