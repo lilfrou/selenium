@@ -8,11 +8,6 @@
     <module>myproject</module>
     <module>mysecondproject</module>
   </modules>
-  <properties>
-	[...]
-	<!-- Tell sonar where to look for the coverage file. Property inherited by submodules -->  
-     					 		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
-	</properties>
   <reporting>
         <plugins>
             <plugin>
