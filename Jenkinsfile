@@ -33,7 +33,6 @@ stages {
     
      stage('sonar') {
          steps{
-             sh "mvn clean install"
                sh 'mvn sonar:sonar\
   -Dsonar.projectKey=lilfrou_selenium\
   -Dsonar.organization=lilfrou-github\
