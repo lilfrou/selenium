@@ -8,9 +8,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <encoding>UTF-8</encoding>
-       <jacoco.version>0.7.5.201505241946</jacoco.version>
-        <testng.version>6.9.10</testng.version>
-        <maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
 </properties>
   <modules>
     <module>myproject</module>
