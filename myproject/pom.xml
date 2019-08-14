@@ -50,5 +50,6 @@
 </build>
 <properties>
         <suiteXmlFile>testng.xml</suiteXmlFile>
+  <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../myproject/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 </project>
