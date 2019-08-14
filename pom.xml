@@ -9,8 +9,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <encoding>UTF-8</encoding>
         <!-- Tell sonar where to look for the coverage file. Property inherited by submodules -->
-        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
-    </properties>
+  <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+</properties>
   <modules>
     <module>myproject</module>
     <module>mysecondproject</module>
