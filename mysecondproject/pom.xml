@@ -47,8 +47,4 @@
       </plugin>
 </plugins>
 </build>
-<properties>
-        <suiteXmlFile>testng.xml</suiteXmlFile>
-  <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../mysecondproject/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-    </properties>
 </project>
