@@ -11,7 +11,7 @@ stages {
         }
     stage('compile stage') {
              steps {
-              sh "mvn clean compile"                        
+              sh "mvn  package"                        
         }
     }  
          stage('selenium') {
