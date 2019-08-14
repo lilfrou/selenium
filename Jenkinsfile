@@ -37,6 +37,7 @@ stages {
  -Dsonar.organization=lilfrou-github\
  -Dsonar.host.url=https://sonarcloud.io\
  -Dsonar.login=33b8b6e55f893798be4dfec2d7a10674105a4890\
+ -Dsonar.coverageReportPaths=target/site/cobertura/coverage.xml\
  -Dsonar.branch.name=lilfrou-patch-1'
 
     }
