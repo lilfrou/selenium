@@ -11,10 +11,7 @@ stages {
         }
     stage('compile stage') {
              steps {
-              sh "mvn clean compile"
-                 sh"jacoco:report-aggregate"
-                 
-               
+              sh "mvn clean compile"                        
         }
     }  
          stage('selenium') {
@@ -28,8 +25,6 @@ stages {
     cobertura coberturaReportFile: 'target/site/cobertura/coverage.xml'
     }
 }
-
-
       } 
     stage('sonar') {
         steps{
