@@ -9,16 +9,16 @@ stages {
                 }
             }
         }
-    stage('compile stage') {
+    stage('cleaning stage') {
              steps {
-              sh "mvn clean compile" 
-                 sh"mvn clean verify"
+              sh "mvn clean" 
+                
         }
     }  
          stage('selenium') {
             steps {
-                sh "mvn clean test -DsuiteXmlFile=testng.xml"
-              sh "mvn clean cobertura:cobertura" 
+                sh "mvn test -DsuiteXmlFile=testng.xml"
+              sh "mvn cobertura:cobertura" 
             }   
              post {
 
@@ -29,7 +29,7 @@ stages {
       } 
     stage('sonar') {
         steps{
-              sh 'mvn -X clean verify sonar:sonar\
+              sh 'mvn verify sonar:sonar\
  -Dsonar.projectKey=lilfrou_selenium\
  -Dsonar.organization=lilfrou-github\
  -Dsonar.host.url=https://sonarcloud.io\
