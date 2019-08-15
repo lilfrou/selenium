@@ -34,7 +34,8 @@ stages {
  -Dsonar.organization=lilfrou-github\
  -Dsonar.host.url=https://sonarcloud.io\
  -Dsonar.login=aea4ae9047ac47d6e0b367b0a12c8d239bbaa1da\
- -Dsonar.branch.name=lilfrou-patch-1'
+ -Dsonar.branch.name=lilfrou-patch-1\
+ -Dsonar.java.libraries=target'
 
     }
     }
