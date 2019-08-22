@@ -38,9 +38,10 @@ stages {
 
     }
     }
-    stage('nexus')
-    {
+    stage('nexus'){
+    steps{
     nexusPublisher nexusInstanceId: 'try1', nexusRepositoryId: 'maven-releases', packages: [[$class: 'MavenPackage', mavenAssetList: [], mavenCoordinate: [artifactId: 'myproject', groupId: 'seleniumparent', packaging: 'war', version: '0.0.1-SNAPSHOT']]]
+    }
     }
 }
     post {
