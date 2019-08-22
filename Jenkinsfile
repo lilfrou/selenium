@@ -41,7 +41,9 @@ stages {
     stage('nexus'){
     steps{
 nexusPublisher nexusInstanceId: 'try1', nexusRepositoryId: 'maven-releases', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: 'myproject/target/myproject-0.0.1-SNAPSHOT.war']], mavenCoordinate: [artifactId: 'seleniumparent', groupId: 'seleniumparent', packaging: 'war', version: '1.1']]]}
-    post {
+    }
+}
+        post {
         always {
             step([$class: 'Publisher', reportFilenamePattern: '**/testng-results.xml'])
             
