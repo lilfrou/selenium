@@ -38,6 +38,33 @@ stages {
 
     }
     }
+    stage('sonar12') {
+        steps{
+    sh 'mvn verify sonar:sonar\
+ -Dsonar.projectKey=lilfrou_selenium\
+ -Dsonar.organization=lilfrou-github\
+ -Dsonar.host.url=https://sonarcloud.io\
+ -Dsonar.login=aea4ae9047ac47d6e0b367b0a12c8d239bbaa1da\
+ -Dsonar.branch.name=sonar\
+ -Dsonar.branch.target=master\
+ -Dsonar.java.libraries=target'
+        }
+    }
+    stage('pull request #20'){ 
+         steps{
+           sh 'mvn verify sonar:sonar  \
+                -Dsonar.projectKey=lilfrou_selenium\
+                -Dsonar.organization=lilfrou-github\
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.login=aea4ae9047ac47d6e0b367b0a12c8d239bbaa1da\
+                -Dsonar.pullrequest.key=5\
+                -Dsonar.pullrequest.branch=sonar\
+                -Dsonar.pullrequest.base=master\
+                -Dsonar.pullrequest.provider=GitHub\
+                -Dsonar.pullrequest.github.repository=lilfrou/selenium\
+                -Dsonar.java.libraries=target'
+         }
+    }
     stage('nexus'){
     steps{
 nexusPublisher nexusInstanceId: 'try1', nexusRepositoryId: 'maven-releases', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: 'myproject/target/myproject-0.0.1-SNAPSHOT.war']], mavenCoordinate: [artifactId: 'seleniumparent', groupId: 'seleniumparent', packaging: 'war', version: '1.1']]]}
