@@ -15,7 +15,14 @@ stages {
                sh'mvn javadoc:aggregate'
                 
         }
-    }  
+    } 
+    job('example') {
+    publishers {
+        archiveJavadoc {
+            javadocDir('target/site/apidocs/index.html')
+        }
+    }
+}
     
 }
 }
