@@ -15,12 +15,6 @@
   </modules>
   <reporting>
         <plugins>
-		 <plugin>
-    <artifactId>maven-javadoc-plugin</artifactId>
-    <configuration>
-      <aggregate>true</aggregate> <!-- this enables aggretation -->
-    </configuration>
-  </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
