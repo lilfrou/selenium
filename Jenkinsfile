@@ -16,15 +16,13 @@ stages {
                 
         }
     } 
-    job('example') {
-    publishers {
+   
+}    
+     publishers {
         archiveJavadoc {
             javadocDir('target/site/apidocs/index.html')
         }
-    }
-}
-    
-}
+     }
 }
     
     
