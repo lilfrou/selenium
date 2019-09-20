@@ -96,4 +96,15 @@
             </plugin>
 </plugins>
 </build>
+	<reporting>
+<plugins>
+    <plugin>
+    <artifactId>maven-javadoc-plugin</artifactId>
+    <configuration>
+      <aggregate>true</aggregate> <!-- this enables aggretation -->
+    </configuration>
+  </plugin>
+
+</plugins>
+  </reporting>
 </project>
