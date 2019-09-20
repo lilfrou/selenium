@@ -12,9 +12,16 @@ stages {
     stage('cleaning stage') {
              steps {
               sh "mvn clean" 
+               sh'mvn javadoc:aggregate'
                 
         }
     }  
+    
+}
+}
+    
+    
+    /*
          stage('selenium') {
             steps {
                 sh "mvn test -DsuiteXmlFile=testng.xml"
@@ -71,9 +78,10 @@ nexusPublisher nexusInstanceId: 'try1', nexusRepositoryId: 'maven-releases', pac
     }
 }
         post {
-        always {
-            step([$class: 'Publisher', reportFilenamePattern: '**/testng-results.xml'])
-            
+        always {*/
+          //  step([$class: 'Publisher', reportFilenamePattern: '**/testng-results.xml'])
+      /*      
         }
 }
 }
+*/
