@@ -13,16 +13,17 @@ stages {
              steps {
               sh "mvn clean" 
                sh'mvn javadoc:aggregate'
+                  publishers {
+        archiveJavadoc {
+            javadocDir('target/site/apidocs/index.html')
+        }
+     }
                 
         }
     } 
    
 }    
-     publishers {
-        archiveJavadoc {
-            javadocDir('target/site/apidocs/index.html')
-        }
-     }
+
 }
     
     
