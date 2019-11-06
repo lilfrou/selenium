@@ -13,7 +13,7 @@ stages {
     stage('cleaning stage') {
              steps {
               sh "mvn clean" 
-               sh'mvn javadoc:aggregate'
+               sh'mvn javadoc:javadoc'
                  
          
                 
