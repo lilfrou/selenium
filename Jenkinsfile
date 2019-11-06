@@ -9,15 +9,26 @@ stages {
                 }
             }
         }
+  
     stage('cleaning stage') {
              steps {
               sh "mvn clean" 
                sh'mvn javadoc:aggregate'
-            
+                 
+         
                 
         }
     } 
-   
+     stage('pub') {
+    publishHTML (target: [
+       allowMissing: false,
+       alwaysLinkToLastBuild: false,
+       keepAll: true,
+       reportDir: 'coverage',
+       reportFiles: 'index.html',
+       reportName: "RCov Report"
+     ])
+    }
 }    
 
 }
