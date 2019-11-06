@@ -21,8 +21,6 @@ stages {
     } 
      stage('pub') {
          steps{
-      System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
-
     publishHTML (target: [
        allowMissing: false,
        alwaysLinkToLastBuild: false,
