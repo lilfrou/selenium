@@ -25,7 +25,7 @@ stages {
        allowMissing: false,
        alwaysLinkToLastBuild: false,
        keepAll: true,
-       reportDir: 'apidocs',
+       reportDir: 'target/site/apidocs',
        reportFiles: 'index.html',
        reportName: "javadoc"
      ])
