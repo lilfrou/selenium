@@ -25,9 +25,9 @@ stages {
        allowMissing: false,
        alwaysLinkToLastBuild: false,
        keepAll: true,
-       reportDir: 'coverage',
+       reportDir: 'apidocs',
        reportFiles: 'index.html',
-       reportName: "RCov Report"
+       reportName: "javadoc"
      ])
          }
     }
