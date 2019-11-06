@@ -20,6 +20,7 @@ stages {
         }
     } 
      stage('pub') {
+         steps{
     publishHTML (target: [
        allowMissing: false,
        alwaysLinkToLastBuild: false,
@@ -28,6 +29,7 @@ stages {
        reportFiles: 'index.html',
        reportName: "RCov Report"
      ])
+         }
     }
 }    
 
