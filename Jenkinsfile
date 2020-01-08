@@ -19,7 +19,7 @@ stages {
                 
         }
     } 
-     stage('pub') {
+     /*stage('pub') {
          steps{
     publishHTML (target: [
        allowMissing: false,
@@ -30,7 +30,7 @@ stages {
        reportName: "javadoc"
      ])
          }
-    }
+    }*/
 }    
 
 }
