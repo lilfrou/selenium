@@ -32,7 +32,7 @@ pipeline {
         }
     } 
          sshagent(['firas-pem']) {
-      sh 'scp -o StrictHostKeyChecking=no myproject/target/*.war ec2-user@xxx.xx.xx.xxx:/opt/tomcat8/webapps/'
+      sh 'scp -o StrictHostKeyChecking=no myproject/target/*.war root@192.168.1.100:/opt/'
     
 }
      /*stage('pub') {
