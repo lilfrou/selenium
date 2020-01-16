@@ -21,16 +21,7 @@ pipeline {
                 }
             }
         }
-   stage("analyse") {
-             steps {
-                 sh 'mvn verify sonar:sonar  \
-                -Dsonar.projectKey=lilfrou_selenium \
-                -Dsonar.projectName=lilfrou-github \
-                -Dsonar.organization=will-technologies \
-                -Dsonar.host.url=https://sonarcloud.io \
-                -Dsonar.login=381851e385437ee2396abddb7104c505ca21e693'
-             }
-   }
+  
     stage('cleaning stage') {
              steps {
               sh "mvn clean install" 
