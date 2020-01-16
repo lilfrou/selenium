@@ -31,7 +31,7 @@ pipeline {
                 
         }
     } 
-          stage('cleaning stage') {
+          stage('aws') {
              steps {
          sshagent(['firas-pem']) {
       sh 'scp -o StrictHostKeyChecking=no myproject/target/*.war root@192.168.1.100:/opt/'
