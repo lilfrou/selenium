@@ -13,13 +13,7 @@ pipeline {
                 '''
             }
         }*/
-         stage("check out")
-         {
-             steps{
-             
-         sh"checkout scm"
-             }
-         }
+        
         stage("clone code") {
             steps {
                 script {
