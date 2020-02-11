@@ -8,10 +8,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <encoding>UTF-8</encoding>
-  <sonar.projectKey>lilfrou_selenium</sonar.projectKey>
-  <sonar.organization>lilfrou-github</sonar.organization>
-  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-  <sonar.login>b9424f7d0ef3247f0ba6bec3d93d2be3382fb019</sonar.login>
 </properties>
   <modules>
     <module>myproject</module>
