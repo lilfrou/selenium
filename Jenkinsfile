@@ -15,7 +15,7 @@ pipeline {
             }
         }
   
-    stage('cleaning stage') {
+    stage('compile') {
              steps {
               sh "mvn clean compile"        
         }
@@ -28,6 +28,16 @@ pipeline {
            stage('package') {
              steps {
               sh "mvn package"        
+        }
+    } 
+              stage('install') {
+             steps {
+              sh "mvn install"        
+        }
+    } 
+              stage('deploy') {
+             steps {
+              sh "mvn deploy"        
         }
     } 
 }    
