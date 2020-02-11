@@ -38,12 +38,7 @@ pipeline {
          
           stage('sonar') {
              steps {
-              sh " mvn verify sonar:sonar \
-                    -Dsonar.projectKey=lilfrou_selenium \
-                    -Dsonar.organization=lilfrou-github \
-                    -Dsonar.host.url=https://sonarcloud.io \
-                    //-Dsonar.branch.name='${env.BRANCH_NAME}' \
-                    -Dsonar.login=b9424f7d0ef3247f0ba6bec3d93d2be3382fb019"
+              sh "mvn verify sonar:sonar"
 
                   }
           }
