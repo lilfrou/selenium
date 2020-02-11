@@ -1,3 +1,4 @@
+def analyse="true"
 pipeline {
     agent any
     tools {
@@ -22,15 +23,15 @@ pipeline {
                   if (env.BRANCH_NAME.startsWith('PR-'))
                   {
                        sh " mvn verify sonar:sonar \
-                    -Dsonar.projectKey=will-technologies_DashBoard_backend \
-                    -Dsonar.organization=will-technologies \
+                    -Dsonar.projectKey=lilfrou_selenium \
+                    -Dsonar.organization=lilfrou-github \
                     -Dsonar.host.url=https://sonarcloud.io \
-                    -Dsonar.login=fb60b36f6cd512ae8112d13c1e621de98418ff61 \
+                    -Dsonar.login=b9424f7d0ef3247f0ba6bec3d93d2be3382fb019 \
                     -Dsonar.pullrequest.base='${CHANGE_TARGET}' \
                     -Dsonar.pullrequest.branch='${env.BRANCH_NAME}' \
                     -Dsonar.pullrequest.key='${env.CHANGE_ID}' \
                     -Dsonar.pullrequest.provider=GitHub \
-                    -Dsonar.pullrequest.github.repository=will-technologies/DashBoard_backend"
+                    -Dsonar.pullrequest.github.repository=lilfrou/selenium"
                   }
                         }else if((env.BRANCH_NAME=="Deploy")||(env.BRANCH_NAME=="Test-selenium"))
                   {
