@@ -35,6 +35,12 @@ pipeline {
               sh "mvn install"        
         }
     } 
+         
+          stage('sonar') {
+             steps {
+              sh "mvn verify sonar:sonar"        
+        }
+    } 
           stage('nexus-upload') {
              steps {
               sh "echo nexus"        
