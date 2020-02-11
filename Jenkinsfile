@@ -35,9 +35,9 @@ pipeline {
               sh "mvn install"        
         }
     } 
-              stage('deploy') {
+          stage('nexus-upload') {
              steps {
-              sh "mvn deploy"        
+              sh "echo nexus"        
         }
     } 
 }    
