@@ -33,7 +33,7 @@ pipeline {
                     -Dsonar.pullrequest.provider=GitHub \
                     -Dsonar.pullrequest.github.repository=lilfrou/selenium"
                   }
-                        }else if((env.BRANCH_NAME=="Deploy")||(env.BRANCH_NAME=="Test-selenium"))
+                        else if((env.BRANCH_NAME=="Deploy")||(env.BRANCH_NAME=="Test-selenium"))
                   {
                       echo 'no analyse allowed'
                   } 
