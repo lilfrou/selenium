@@ -14,6 +14,12 @@ pipeline {
                 }
             }
         }
+           stage('sonar') {
+             steps {
+              sh "mvn verify sonar:sonar"
+
+                  }
+          }
   
     stage('compile') {
              steps {
@@ -36,12 +42,7 @@ pipeline {
         }
     } 
          
-          stage('sonar') {
-             steps {
-              sh "mvn verify sonar:sonar"
-
-                  }
-          }
+        
           stage('nexus-upload') {
              steps {
               sh "echo nexus"        
