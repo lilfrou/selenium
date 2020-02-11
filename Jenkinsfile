@@ -7,14 +7,7 @@ pipeline {
     }
      stages {
       
-        stage("clone code") {
-            steps {
-                script {
-                    // Let's clone the source
-                    git 'https://github.com/lilfrou/selenium.git';
-                }
-            }
-        }
+       
            stage('sonar') {
              steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
