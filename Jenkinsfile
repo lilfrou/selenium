@@ -2,6 +2,7 @@ def analyse="true"
 def USER_INPUT=""
 def password="hrdatabank**"
 def inputConfig=""
+def userInput1=""
 pipeline {
     agent any
     tools {
@@ -30,7 +31,7 @@ pipeline {
                     ])
                 
                
-                      def userInput1 = input(
+                       userInput1 = input(
                             id: 'userInput', message: 'type the password',
                             parameters: [
 
@@ -42,7 +43,7 @@ pipeline {
                    inputConfig = userInput.pass?:''
                 while(inputConfig =! "hrdatabank**") { 
                     
-                      def userInput1 = input(
+                       userInput1 = input(
                             id: 'userInput', message: 'type the password',
                             parameters: [
 
