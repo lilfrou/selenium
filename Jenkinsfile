@@ -1,14 +1,58 @@
 def analyse="true"
+def USER_INPUT=""
 pipeline {
     agent any
     tools {
         maven 'maven3.6.1'
         jdk 'jdk'
     }
-     stages {
-      
+
+     stages {  
+           stage('dev-mirror') {
+              when {
+                branch 'Deploy'
+            }  
+             steps {
+                      
+            script {
+            // Define Variable
+            timeout(time: 1, unit: 'MINUTES') {
+             USER_INPUT = input(
+                    message: 'Whats is the envirement you would like to deploy in ?',
+                    parameters: [
+                            [$class: 'ChoiceParameterDefinition',
+                             choices: ['Dev','Prod'].join('\n'),
+                             name: 'input',
+                             description: 'Menu - select deploy enviremont']
+                    ])
+            echo "The answer is: ${USER_INPUT}"
+            if( "${USER_INPUT}" == "Prod"){
+                sh"mvn -Pprod clean install"
+            }
+                else if( "${USER_INPUT}" == "Dev"){
+                sh"mvn -Pdev clean install"
+                }
+                else {
+                sh"echo no deploy"
+                }
+            }
+            }
+             }
+           }
        
-           stage('sonar') {
+              stage('build') {
+             steps {
+              sh "mvn install -DskipTests"        
+        }
+    } 
+            stage('test') {
+             steps {
+                 sh"mvn test"
+              //sh "mvn -pl !dashboardSelenium test"      
+        }
+    } 
+       stage('sonar') {
+
              steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
               script{
@@ -45,29 +89,35 @@ pipeline {
                   }
              }
            }
-          } 
-    stage('compile') {
+          }   
+           stage('javadoc'){   
+            
+          steps{   
+                    sh"mvn javadoc:aggregate"   
+                    publishHTML (target: [
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: 'target/site/apidocs',
+
+                                reportFiles: 'index.html',
+                                reportName: "javadoc"
+                                           ])
+       
+           }
+         }
+          stage('selenium') {
              steps {
-              sh "mvn clean compile"        
+              sh "echo nexus"        
         }
-    } 
-         stage('test') {
+          }
+                stage('deploy') {
              steps {
-              sh "mvn test"        
+              sh "echo nexus"        
         }
-    } 
-           stage('package') {
-             steps {
-              sh "mvn package"        
-        }
-    } 
-              stage('install') {
-             steps {
-              sh "mvn install"        
-        }
-    } 
+                }
+              
          
-        
           stage('nexus-upload') {
              steps {
               sh "echo nexus"        
