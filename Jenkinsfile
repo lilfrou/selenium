@@ -37,7 +37,7 @@ pipeline {
             }
              }
            }
-     }  
+       
               stage('build') {
              steps {
               sh "mvn install -DskipTests"        
@@ -107,10 +107,12 @@ pipeline {
              steps {
               sh "echo nexus"        
         }
+          }
                 stage('deploy') {
              steps {
               sh "echo nexus"        
         }
+                }
               
          
           stage('nexus-upload') {
