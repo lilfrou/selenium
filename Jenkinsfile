@@ -108,7 +108,7 @@ pipeline {
                     message: 'Whats is the environment you would like to deploy in ?',
                     parameters: [
                             [$class: 'ChoiceParameterDefinition',
-                             choices: ['Dev','Prod'].join('\n'),
+                             choices: ['Dev','Mirror'].join('\n'),
                              name: 'input',
                              description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
                     ])
@@ -140,8 +140,8 @@ pipeline {
                 }
                  
             echo "The answer is: ${USER_INPUT}"
-            if( "${USER_INPUT}" == "Prod"){
-                sh"mvn -Pprod clean install"
+            if( "${USER_INPUT}" == "Mirror"){
+                sh"mvn -Pmirror clean install"
             }
                 else if( "${USER_INPUT}" == "Dev"){
                 sh"mvn -Pdev clean install"
