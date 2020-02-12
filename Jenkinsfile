@@ -4,6 +4,7 @@ def password="hrdatabank**"
 def inputConfig=""
 def userInput1=""
 def i=1
+def j=3
 pipeline {
     agent any
     tools {
@@ -37,11 +38,11 @@ pipeline {
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
                          name: 'password',
-                description: 'Reminder - the pipeline will abort itself in less then  1 Minute ']])
+                 description: 'You Have "${j}" trys \n Reminder - the pipeline will abort itself in less then  1 Minute ']])
                 echo "The answer is: ${userInput1}"
                  
                 while("${userInput1}" != "hrdatabank**") { 
-                     
+                     j--;
                     
                        userInput1 = input(id: 'userInput',
    message: 'Please type the password?',
@@ -73,11 +74,17 @@ pipeline {
            }
        
               stage('build') {
+                     when {
+                branch 'Develop'
+            }  
              steps {
               sh "mvn install -DskipTests"        
         }
     } 
             stage('test') {
+                        when {
+                branch 'Develop'
+            }  
              steps {
                  sh"mvn test"
               //sh "mvn -pl !dashboardSelenium test"      
@@ -123,6 +130,9 @@ pipeline {
            }
           }   
            stage('javadoc'){   
+                       when {
+                branch 'Develop'
+            }  
             
           steps{   
                     sh"mvn javadoc:aggregate"   
@@ -139,11 +149,17 @@ pipeline {
            }
          }
           stage('selenium') {
+                      when {
+                branch 'Develop'
+            }  
              steps {
               sh "echo nexus"        
         }
           }
                 stage('deploy') {
+                            when {
+                branch 'Develop'
+            }  
              steps {
               sh "echo nexus"        
         }
@@ -151,6 +167,9 @@ pipeline {
               
          
           stage('nexus-upload') {
+                      when {
+                branch 'Develop'
+            }  
              steps {
               sh "echo nexus"        
         }
