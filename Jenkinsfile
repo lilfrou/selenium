@@ -40,6 +40,7 @@ pipeline {
                                             name: 'pass'),
                                     
                             ])
+                echo "The answer is: ${userInput1}"
                    inputConfig = userInput1.pass?:''
                 while(inputConfig =! "hrdatabank**") { 
                     
