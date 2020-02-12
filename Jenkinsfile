@@ -11,67 +11,6 @@ pipeline {
     }
 
      stages {  
-           stage('dev-mirror') {
-              when {
-                branch 'Deploy'
-            }  
-             steps {
-              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
-            script {
-            // Define Variable
-            timeout(time: 1, unit: 'MINUTES') {
-                
-             USER_INPUT = input(
-                    message: 'Whats is the environment you would like to deploy in ?',
-                    parameters: [
-                            [$class: 'ChoiceParameterDefinition',
-                             choices: ['Dev','Prod'].join('\n'),
-                             name: 'input',
-                             description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
-                    ])
-                
-              withCredentials([string(credentialsId: 'password', variable: 'password')]) {
-                     
-                       userInput1 = input(id: 'userInput',
-   message: 'Please type the password?',
-   parameters: [[$class: 'PasswordParameterDefinition',
-                         defaultValue: "",
-                         name: 'Reminder - the pipeline will abort itself in less then  1 Minute',
-                 description: "You Have '${j}' Trys Left"]])
-                echo "The answer is: ${userInput1}"
-                 
-                   while("${userInput1}" != "${password}") { 
-                     j--;
-                    
-                       userInput1 = input(id: 'userInput',
-   message: 'Please type the password?',
-   parameters: [[$class: 'PasswordParameterDefinition',
-                         defaultValue: "",
-                         name: 'Reminder - the pipeline will abort itself soon',
-                description: "You Have '${j}' Trys Left"]])
-                    i++;
-                       if(i==3 && ("${userInput1}" != "${password}")){
-                    sh"exit 1"
-                    }
-                   }
-                }
-                 
-            echo "The answer is: ${USER_INPUT}"
-            if( "${USER_INPUT}" == "Prod"){
-                sh"mvn -Pprod clean install"
-            }
-                else if( "${USER_INPUT}" == "Dev"){
-                sh"mvn -Pdev clean install"
-                }
-                else {
-                sh"echo no deploy"
-                }
-            }
-            }
-             }
-           }
-           }
-       
               stage('build') {
                      when {
                 branch 'Develop'
@@ -155,9 +94,69 @@ pipeline {
               sh "echo nexus"        
         }
           }
-                stage('deploy') {
+         stage('dev-mirror') {
+              when {
+                branch 'Deploy'
+            }  
+             steps {
+              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
+            script {
+            // Define Variable
+            timeout(time: 1, unit: 'MINUTES') {
+                
+             USER_INPUT = input(
+                    message: 'Whats is the environment you would like to deploy in ?',
+                    parameters: [
+                            [$class: 'ChoiceParameterDefinition',
+                             choices: ['Dev','Prod'].join('\n'),
+                             name: 'input',
+                             description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
+                    ])
+                
+              withCredentials([string(credentialsId: 'password', variable: 'password')]) {
+                     
+                       userInput1 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'Reminder - the pipeline will abort itself in less then  1 Minute',
+                 description: "You Have '${j}' Trys Left"]])
+                echo "The answer is: ${userInput1}"
+                 
+                   while("${userInput1}" != "${password}") { 
+                     j--;
+                    
+                       userInput1 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'Reminder - the pipeline will abort itself soon',
+                description: "You Have '${j}' Trys Left"]])
+                    i++;
+                       if(i==3 && ("${userInput1}" != "${password}")){
+                    sh"exit 1"
+                    }
+                   }
+                }
+                 
+            echo "The answer is: ${USER_INPUT}"
+            if( "${USER_INPUT}" == "Prod"){
+                sh"mvn -Pprod clean install"
+            }
+                else if( "${USER_INPUT}" == "Dev"){
+                sh"mvn -Pdev clean install"
+                }
+                else {
+                sh"echo no deploy"
+                }
+            }
+            }
+             }
+           }
+           }
+                stage('Release-to-ProD') {
                             when {
-                branch 'Develop'
+                branch 'master'
             }  
              steps {
               sh "echo nexus"        
@@ -167,7 +166,7 @@ pipeline {
          
           stage('nexus-upload') {
                       when {
-                branch 'Develop'
+                branch 'master'
             }  
              steps {
               sh "echo nexus"        
