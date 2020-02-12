@@ -32,7 +32,7 @@ pipeline {
                              description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
                     ])
                 
-               
+               withCredentials([string(credentialsId: 'password', variable: '')]) {
                      
                        userInput1 = input(id: 'userInput',
    message: 'Please type the password?',
@@ -42,7 +42,7 @@ pipeline {
                  description: "You Have '${j}' Trys Left"]])
                 echo "The answer is: ${userInput1}"
                  
-                while("${userInput1}" != "hrdatabank**") { 
+                   while("${userInput1}" != "${password}") { 
                      j--;
                     
                        userInput1 = input(id: 'userInput',
@@ -52,10 +52,10 @@ pipeline {
                          name: 'Reminder - the pipeline will abort itself soon',
                 description: "You Have '${j}' Trys Left"]])
                     i++;
-                    if(i==3 && ("${userInput1}" != "hrdatabank**")){
+                       if(i==3 && ("${userInput1}" != "${password}")){
                     sh"exit 1"
                     }
-                    
+                   }
                 }
                  
             echo "The answer is: ${USER_INPUT}"
