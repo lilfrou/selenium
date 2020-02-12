@@ -29,7 +29,7 @@ pipeline {
                              description: 'Chose Wise - then pipeline will abort itself in 1 Minute ']
                     ])
                 
-               loop {
+               do {
                       def userInput1 = input(
                             id: 'userInput', message: 'type the password',
                             parameters: [
@@ -40,7 +40,7 @@ pipeline {
                                     
                             ])
                    inputConfig = userInput.pass?:''
-                    } until { inputConfig == "hrdatabank**" }
+                  } while(inputConfig == "hrdatabank**")  
             echo "The answer is: ${USER_INPUT}"
             if( "${USER_INPUT}" == "Prod"){
                 sh"mvn -Pprod clean install"
