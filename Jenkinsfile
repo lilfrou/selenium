@@ -158,17 +158,9 @@ pipeline {
              }
            }
            }
-                stage('Release-to-ProD') {
-                            when {
-                branch 'master'
-            }  
-             steps {
-              sh "echo nexus"        
-        }
-                }
-              
-         
-          stage('nexus-upload') {
+                
+             
+          stage('Release-to-ProD') {
                       when {
                 branch 'master'
             }  
@@ -223,7 +215,15 @@ pipeline {
              }
            }
            }
-                     
+             stage('nexus-upload') {
+                            when {
+                branch 'master'
+            }  
+             steps {
+              sh "echo nexus"        
+        }
+                }
+                  
     
          stage('Clean'){     
           steps{  
