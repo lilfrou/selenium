@@ -175,6 +175,14 @@ pipeline {
               sh "echo nexus"        
         }
     } 
+         stage('Clean'){     
+          steps{  
+                script{
+                cleanWs()
+                 
+                }
+          }
+         }
 }    
 
 }
