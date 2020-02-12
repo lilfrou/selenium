@@ -34,6 +34,8 @@ pipeline {
                 sh"echo no deploy"
                 }
             }
+            }
+             }
                  }
               stage('build') {
              steps {
