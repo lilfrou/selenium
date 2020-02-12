@@ -1,8 +1,12 @@
 def analyse="true"
 def USER_INPUT=""
 def userInput1=""
+def USER_INPUT1=""
+def userInput2=""
 def i=1
 def j=3
+def l=1
+def k=3
 pipeline {
     agent any
     tools {
@@ -169,9 +173,58 @@ pipeline {
                 branch 'master'
             }  
              steps {
-              sh "echo nexus"        
-        }
-    } 
+                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
+            script {
+            // Define Variable
+            timeout(time: 1, unit: 'MINUTES') {
+                
+             USER_INPUT1 = input(
+                    message: 'Are you sure you want to Deploy to the PROD Envireronment?',
+                    parameters: [
+                            [$class: 'ChoiceParameterDefinition',
+                             choices: ['Yes','No'].join('\n'),
+                             name: 'input',
+                             description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
+                    ])
+                
+              withCredentials([string(credentialsId: 'password', variable: 'password')]) {
+                     
+                       userInput2 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'Reminder - the pipeline will abort itself in less then  1 Minute',
+                 description: "You Have '${k}' Trys Left"]])
+                echo "The answer is: ${userInput2}"
+                 
+                   while("${userInput2}" != "${password}") { 
+                     k--;
+                    
+                       userInput2 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'Reminder - the pipeline will abort itself soon',
+                description: "You Have '${k}' Trys Left"]])
+                    l++;
+                       if(i==3 && ("${userInput2}" != "${password}")){
+                    sh"exit 1"
+                    }
+                   }
+                }
+                 
+            echo "The answer is: ${USER_INPUT1}"
+            if( "${USER_INPUT1}" == "Yes"){
+                sh"mvn -Pprod clean install"
+            }
+               
+            }
+            }
+             }
+           }
+           }
+                     
+    
          stage('Clean'){     
           steps{  
                 script{
