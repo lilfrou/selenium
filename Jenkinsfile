@@ -31,7 +31,7 @@ pipeline {
                              description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
                     ])
                 
-               withCredentials([string(credentialsId: 'password', variable: '')]) {
+              withCredentials([string(credentialsId: 'password', variable: 'password')]) {
                      
                        userInput1 = input(id: 'userInput',
    message: 'Please type the password?',
