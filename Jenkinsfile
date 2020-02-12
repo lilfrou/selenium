@@ -18,12 +18,12 @@ pipeline {
             // Define Variable
             timeout(time: 1, unit: 'MINUTES') {
              USER_INPUT = input(
-                    message: 'Whats is the envirement you would like to deploy in ?',
+                    message: 'Whats is the environment you would like to deploy in ?',
                     parameters: [
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Dev','Prod'].join('\n'),
                              name: 'input',
-                             description: 'Menu - select deploy enviremont']
+                             description: 'Chose Wise - then pipeline will abort itself in 1 Minute ']
                     ])
             echo "The answer is: ${USER_INPUT}"
             if( "${USER_INPUT}" == "Prod"){
