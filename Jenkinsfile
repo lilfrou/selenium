@@ -37,8 +37,7 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'password',
-                 description: 'You Have "${j}" trys \n Reminder - the pipeline will abort itself in less then  1 Minute ']])
+                 description: "You Have '${j}' Trys Left \n Reminder - the pipeline will abort itself in less then  1 Minute "]])
                 echo "The answer is: ${userInput1}"
                  
                 while("${userInput1}" != "hrdatabank**") { 
