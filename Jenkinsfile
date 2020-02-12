@@ -1,4 +1,5 @@
 def analyse="true"
+def USER_INPUT=""
 pipeline {
     agent any
     tools {
@@ -15,7 +16,7 @@ pipeline {
             script {
             // Define Variable
             timeout(time: 1, unit: 'MINUTES') {
-             def USER_INPUT = input(
+             USER_INPUT = input(
                     message: 'Whats is the envirement you would like to deploy in ?',
                     parameters: [
                             [$class: 'ChoiceParameterDefinition',
