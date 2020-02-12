@@ -94,7 +94,7 @@ pipeline {
               sh "echo nexus"        
         }
           }
-         stage('dev-mirror') {
+         stage('Deploy to \ndev-mirror') {
               when {
                 branch 'Deploy'
             }  
