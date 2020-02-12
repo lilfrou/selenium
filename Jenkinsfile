@@ -41,8 +41,8 @@ pipeline {
                                     
                             ])
                 echo "The answer is: ${userInput1}"
-                   inputConfig = userInput1.pass?:''
-                while(inputConfig =! "hrdatabank**") { 
+                 
+                while(userInput1=! "hrdatabank**") { 
                     
                        userInput1 = input(
                             id: 'userInput', message: 'type the password',
@@ -53,7 +53,7 @@ pipeline {
                                             name: 'pass'),
                                     
                             ])
-                    inputConfig = userInput1.pass?:''
+                    
                 }
                  
             echo "The answer is: ${USER_INPUT}"
