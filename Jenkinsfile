@@ -1,6 +1,5 @@
 def analyse="true"
 def USER_INPUT=""
-def password="hrdatabank**"
 def inputConfig=""
 def userInput1=""
 def i=1
