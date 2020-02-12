@@ -52,7 +52,7 @@ pipeline {
                          name: 'Reminder - the pipeline will abort itself soon',
                 description: "You Have '${j}' Trys Left"]])
                     i++;
-                    if(i==3){
+                    if(i==3 && ("${userInput1}" != "hrdatabank**")){
                     sh"exit 1"
                     }
                     
