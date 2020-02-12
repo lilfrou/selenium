@@ -35,7 +35,7 @@ pipeline {
                             id: 'userInput', message: 'type the password',
                             parameters: [
 
-                                    string(defaultValue: 'None',
+                                    password(defaultValue: 'None',
                                             description: 'secret password',
                                             name: 'pass'),
                                     
@@ -48,7 +48,7 @@ pipeline {
                             id: 'userInput', message: 'type the password',
                             parameters: [
 
-                                    string(defaultValue: 'None',
+                                    password(defaultValue: 'None',
                                             description: 'secret password',
                                             name: 'pass'),
                                     
