@@ -3,6 +3,7 @@ def USER_INPUT=""
 def password="hrdatabank**"
 def inputConfig=""
 def userInput1=""
+def i=1
 pipeline {
     agent any
     tools {
@@ -40,7 +41,7 @@ pipeline {
                 echo "The answer is: ${userInput1}"
                  
                 while("${userInput1}" != "hrdatabank**") { 
-                    def i=1
+                     
                     
                        userInput1 = input(id: 'userInput',
    message: 'Please type the password?',
