@@ -1,6 +1,5 @@
 def analyse="true"
 def USER_INPUT=""
-def inputConfig=""
 def userInput1=""
 def i=1
 def j=3
