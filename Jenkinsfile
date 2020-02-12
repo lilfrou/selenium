@@ -184,7 +184,7 @@ pipeline {
 }    
     post {
         always {
-            mail to: 'mhennifiras100@gmail.com', from: 'bboy.lil.frou@gmail.com',
+            mail to: 'fmhenni@hrdatabank.com', from: 'bboy.lil.frou@gmail.com',
                 subject: "Example Build: ${env.JOB_NAME} - Failed", 
                 body: "Job Failed - \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
         }
