@@ -27,7 +27,7 @@ pipeline {
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Dev','Prod'].join('\n'),
                              name: 'input',
-                             description: 'Chose Wise - then pipeline will abort itself in 1 Minute ']
+                             description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
                     ])
                 
                
@@ -35,16 +35,23 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'password']])
+                         name: 'password',
+                description: 'Reminder - the pipeline will abort itself in less then  1 Minute ']])
                 echo "The answer is: ${userInput1}"
                  
                 while("${userInput1}" != "hrdatabank**") { 
+                    def i=1
                     
                        userInput1 = input(id: 'userInput',
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'password']])
+                         name: 'password',
+                description: ' Reminder - the pipeline will abort itself soon ']])
+                    i++;
+                    if(i==3){
+                    sh"exit 1"
+                    }
                     
                 }
                  
