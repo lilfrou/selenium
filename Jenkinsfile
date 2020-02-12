@@ -13,10 +13,48 @@ pipeline {
     } 
             stage('test') {
              steps {
-              sh "mvn -pl !dashboardSelenium test"      
+                 sh"mvn test"
+              //sh "mvn -pl !dashboardSelenium test"      
         }
     } 
-         
+       stage('sonar') {
+             steps {
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              script{
+                  try { 
+                  if (env.BRANCH_NAME.startsWith('PR-'))
+                  {
+                       sh " mvn verify sonar:sonar \
+                    -Dsonar.projectKey=lilfrou_selenium \
+                    -Dsonar.organization=lilfrou-github \
+                    -Dsonar.host.url=https://sonarcloud.io \
+                    -Dsonar.login=b9424f7d0ef3247f0ba6bec3d93d2be3382fb019 \
+                    -Dsonar.pullrequest.base='${CHANGE_TARGET}' \
+                    -Dsonar.pullrequest.branch='${env.BRANCH_NAME}' \
+                    -Dsonar.pullrequest.key='${env.CHANGE_ID}' \
+                    -Dsonar.pullrequest.provider=GitHub \
+                    -Dsonar.pullrequest.github.repository=lilfrou/selenium"
+                  }
+                        else if((env.BRANCH_NAME=="Deploy")||(env.BRANCH_NAME=="Test-selenium"))
+                  {
+                      echo 'no analyse allowed'
+                  } 
+                 else {
+             sh " mvn verify sonar:sonar \
+                    -Dsonar.projectKey=lilfrou_selenium \
+                    -Dsonar.organization=lilfrou-github \
+                    -Dsonar.host.url=https://sonarcloud.io \
+                    -Dsonar.branch.name='${env.BRANCH_NAME}' \
+                    -Dsonar.login=b9424f7d0ef3247f0ba6bec3d93d2be3382fb019"
+                  }
+                  
+                       } catch (Exception e) {
+                analyse="false"
+               sh "exit 1"}
+                  }
+             }
+           }
+          }   
         
           stage('nexus-upload') {
              steps {
