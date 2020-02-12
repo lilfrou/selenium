@@ -6,6 +6,35 @@ pipeline {
         jdk 'jdk'
     }
      stages {  
+           stage('dev-mirror') {
+              when {
+                branch 'Deploy'
+            }  
+             steps {
+                      
+            script {
+            // Define Variable
+            timeout(time: 1, unit: 'MINUTES') {
+             def USER_INPUT = input(
+                    message: 'Whats is the envirement you would like to deploy in ?',
+                    parameters: [
+                            [$class: 'ChoiceParameterDefinition',
+                             choices: ['Dev','Prod'].join('\n'),
+                             name: 'input',
+                             description: 'Menu - select deploy enviremont']
+                    ])
+            echo "The answer is: ${USER_INPUT}"
+            if( "${USER_INPUT}" == "Prod"){
+                sh"mvn -Pprod clean install"
+            }
+                else if( "${USER_INPUT}" == "Dev"){
+                sh"mvn -Pdev clean install"
+                }
+                else {
+                sh"echo no deploy"
+                }
+            }
+                 }
               stage('build') {
              steps {
               sh "mvn install -DskipTests"        
@@ -71,7 +100,16 @@ pipeline {
        
            }
          }
-        
+          stage('selenium') {
+             steps {
+              sh "echo nexus"        
+        }
+                stage('deploy') {
+             steps {
+              sh "echo nexus"        
+        }
+              
+         
           stage('nexus-upload') {
              steps {
               sh "echo nexus"        
