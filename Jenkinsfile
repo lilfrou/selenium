@@ -6,6 +6,7 @@ pipeline {
         maven 'maven3.6.1'
         jdk 'jdk'
     }
+
      stages {  
            stage('dev-mirror') {
               when {
@@ -51,6 +52,7 @@ pipeline {
         }
     } 
        stage('sonar') {
+
              steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
               script{
