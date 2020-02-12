@@ -42,7 +42,7 @@ pipeline {
                             ])
                 echo "The answer is: ${userInput1}"
                  
-                while('${userInput1}'=! "hrdatabank**") { 
+                while("${userInput1}"=! "hrdatabank**") { 
                     
                        userInput1 = input(
                             id: 'userInput', message: 'type the password',
