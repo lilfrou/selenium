@@ -55,6 +55,22 @@ pipeline {
              }
            }
           }   
+           stage('javadoc'){   
+            
+          steps{   
+                    sh"mvn javadoc:aggregate"   
+                    publishHTML (target: [
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: 'target/site/apidocs',
+
+                                reportFiles: 'index.html',
+                                reportName: "javadoc"
+                                           ])
+       
+           }
+         }
         
           stage('nexus-upload') {
              steps {
