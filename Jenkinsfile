@@ -31,12 +31,22 @@ pipeline {
                     ])
                 
                
-                       userInput1 = input message: 'enter password', parameters: [password(defaultValue: 'value', description: '', name: 'hidden')]
+                       userInput1 = input(id: 'userInput',
+   message: 'Do you want to release this build?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'password',
+                         description: 'Password']])
                 echo "The answer is: ${userInput1}"
                  
                 while("${userInput1}" != "hrdatabank**") { 
                     
-                       userInput1 = input message: 'enter password', parameters: [password(defaultValue: 'value', description: '', name: 'hidden')]
+                       userInput1 = input(id: 'userInput',
+   message: 'Do you want to release this build?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'password',
+                         description: 'Password']])
                     
                 }
                  
