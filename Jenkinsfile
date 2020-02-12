@@ -36,7 +36,7 @@ pipeline {
             }
             }
              }
-                 }
+                 
               stage('build') {
              steps {
               sh "mvn install -DskipTests"        
