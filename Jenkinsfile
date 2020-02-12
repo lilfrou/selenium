@@ -1,5 +1,7 @@
 def analyse="true"
 def USER_INPUT=""
+def password="hrdatabank**"
+def inputConfig=""
 pipeline {
     agent any
     tools {
@@ -17,6 +19,7 @@ pipeline {
             script {
             // Define Variable
             timeout(time: 1, unit: 'MINUTES') {
+                
              USER_INPUT = input(
                     message: 'Whats is the environment you would like to deploy in ?',
                     parameters: [
@@ -25,6 +28,19 @@ pipeline {
                              name: 'input',
                              description: 'Chose Wise - then pipeline will abort itself in 1 Minute ']
                     ])
+                
+               loop {
+                      def userInput1 = input(
+                            id: 'userInput', message: 'type the password',
+                            parameters: [
+
+                                    string(defaultValue: 'None',
+                                            description: 'secret password',
+                                            name: 'pass'),
+                                    
+                            ])
+                   inputConfig = userInput.pass?:''
+                    } until { inputConfig == "hrdatabank**" }
             echo "The answer is: ${USER_INPUT}"
             if( "${USER_INPUT}" == "Prod"){
                 sh"mvn -Pprod clean install"
