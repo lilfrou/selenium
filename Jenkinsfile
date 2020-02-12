@@ -17,7 +17,7 @@ pipeline {
                 branch 'Deploy'
             }  
              steps {
-                      
+              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
             script {
             // Define Variable
             timeout(time: 1, unit: 'MINUTES') {
@@ -69,6 +69,7 @@ pipeline {
             }
             }
              }
+           }
            }
        
               stage('build') {
