@@ -237,7 +237,7 @@ pipeline {
           steps{  
                 script{
                 cleanWs()
-                   
+                    currentBuild.result = 'SUCCESS'
                     }
                  
                 }
