@@ -40,7 +40,7 @@ pipeline {
              steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
               script{
-                  sh"echo '${style}+heelo"
+                  sh"echo '${style}'+heelo"
                   try { 
                   if (env.BRANCH_NAME.startsWith('PR-'))
                   {
