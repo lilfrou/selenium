@@ -201,7 +201,7 @@ pipeline {
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
                          name: 'Reminder - the pipeline will abort itself soon',
-                description: "'${style}'Wrong Password! \nYou Have '${k}' Trys Left"]])
+                description: "'${style}'+Wrong Password! \nYou Have '${k}' Trys Left"]])
                     l++;
                        if(l==3 && ("${userInput2}" != "${password}")){
                     sh"exit 1"
