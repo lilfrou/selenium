@@ -199,7 +199,7 @@ pipeline {
                          name: 'Reminder - the pipeline will abort itself soon',
                 description: "You Have '${k}' Trys Left"]])
                     l++;
-                       if(i==3 && ("${userInput2}" != "${password}")){
+                       if(l==3 && ("${userInput2}" != "${password}")){
                     sh"exit 1"
                     }
                    }
