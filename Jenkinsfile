@@ -173,7 +173,6 @@ pipeline {
             script {
             // Define Variable
             timeout(time: 1, unit: 'MINUTES') {
-                try {
                 
              USER_INPUT1 = input(
                     message: 'Are you sure you want to Deploy to the PROD Envireronment?',
@@ -215,16 +214,7 @@ pipeline {
             if( "${USER_INPUT1}" == "Yes"){
                 sh"mvn -Pprod clean install"
             }
-              } catch (e) {
-  if (autoCancelled) {
-    currentBuild.result = 'ABORTED'
-    echo('Skipping mail notification')
-    // return here instead of throwing error to keep the build "green"
-    return
-  }
-  // normal error handling
-  throw e
-} 
+              
             }
             }
              }
