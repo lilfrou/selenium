@@ -235,7 +235,7 @@ pipeline {
                 script{
                 cleanWs()
                     if(analyse=="false"){
-                     sh"exit1"   
+                      currentBuild.result = 'FAILURE'  
                     }
                  
                 }
