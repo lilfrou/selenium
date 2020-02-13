@@ -206,12 +206,14 @@ pipeline {
                        if(l==3 && ("${userInput2}" != "${password}")){
                     sh"exit 1"
                     }
+                   }
                        else
                        {
-                            currentBuild.result = 'ABORTED'
+                            currentBuild.result ='ABORTED'
+                           return
                        }
                    }
-                }
+                
                  }
                  
        
