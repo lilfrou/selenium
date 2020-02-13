@@ -40,7 +40,7 @@ pipeline {
              steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
               script{
-                  sh"echo '${style}'+heelo"
+                 
                   try { 
                   if (env.BRANCH_NAME.startsWith('PR-'))
                   {
@@ -201,7 +201,7 @@ pipeline {
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
                          name: 'Reminder - the pipeline will abort itself soon',
-                description: "You Have '${k}' Trys Left"]])
+                description: "'${style}'Wrong Password! \nYou Have '${k}' Trys Left"]])
                     l++;
                        if(l==3 && ("${userInput2}" != "${password}")){
                     sh"exit 1"
