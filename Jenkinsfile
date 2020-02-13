@@ -234,7 +234,7 @@ pipeline {
           steps{  
                 script{
                 cleanWs()
-                    if(analyse="false"){
+                    if(analyse=="false"){
                      sh"exit1"   
                     }
                  
