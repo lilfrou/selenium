@@ -125,7 +125,7 @@ pipeline {
                          defaultValue: "",
                          name: 'Reminder - the pipeline will abort itself in less then  1 Minute',
                  description: "You Have '${j}' Trys Left"]])
-                echo "The answer is: ${userInput1}"
+               
                  
                    while("${userInput1}" != "${password}") { 
                      j--;
@@ -143,7 +143,7 @@ pipeline {
                    }
                 }
                  
-            echo "The answer is: ${USER_INPUT}"
+            
             if( "${USER_INPUT}" == "Mirror"){
                 sh"mvn -Pmirror clean install"
             }
@@ -178,7 +178,7 @@ pipeline {
                              name: 'input',
                              description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
                     ])
-                
+                 if( "${USER_INPUT1}" == "Yes"){
               withCredentials([string(credentialsId: 'password', variable: 'password')]) {
                      
                        userInput2 = input(id: 'userInput',
@@ -187,7 +187,7 @@ pipeline {
                          defaultValue: "",
                          name: 'Reminder - the pipeline will abort itself in less then  1 Minute',
                  description: "You Have '${k}' Trys Left"]])
-                echo "The answer is: ${userInput2}"
+               
                  
                    while("${userInput2}" != "${password}") { 
                      k--;
@@ -204,8 +204,9 @@ pipeline {
                     }
                    }
                 }
+                 }
                  
-            echo "The answer is: ${USER_INPUT1}"
+       
             if( "${USER_INPUT1}" == "Yes"){
                 sh"mvn -Pprod clean install"
             }
