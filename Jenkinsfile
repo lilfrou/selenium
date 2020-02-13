@@ -40,7 +40,7 @@ pipeline {
              steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
               script{
-                 
+                 sh"exit 2" 
                   try { 
                   if (env.BRANCH_NAME.startsWith('PR-'))
                   {
