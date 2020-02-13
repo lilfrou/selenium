@@ -207,12 +207,13 @@ pipeline {
                     sh"exit 1"
                     }
                    }
+              }
                        else
                        {
                             currentBuild.result ='ABORTED'
                            return
                        }
-                   }
+                   
                 
                  }
                  
