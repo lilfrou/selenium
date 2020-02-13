@@ -37,7 +37,6 @@ pipeline {
              steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
               script{
-                 sh"exit 2" 
                   try { 
                   if (env.BRANCH_NAME.startsWith('PR-'))
                   {
@@ -209,7 +208,9 @@ pipeline {
               }
                 
                  }
-                 
+                if( "${USER_INPUT1}" == "No"){
+                    sh"exit 1"
+                }
        
             if( "${USER_INPUT1}" == "Yes"){
                 sh"mvn -Pprod clean install"
