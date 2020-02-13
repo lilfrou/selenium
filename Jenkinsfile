@@ -7,6 +7,9 @@ def i=1
 def j=3
 def l=1
 def k=3
+def fg = 30
+def bg = 46
+def style = "${(char)27}[$fg;$bg"+"m"
 pipeline {
     agent any
     tools {
@@ -37,6 +40,7 @@ pipeline {
              steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
               script{
+                  sh"echo '${style}+heelo"
                   try { 
                   if (env.BRANCH_NAME.startsWith('PR-'))
                   {
