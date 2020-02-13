@@ -209,8 +209,8 @@ pipeline {
                 
                  }
                 if( "${USER_INPUT1}" == "No"){
-                   currentBuild.result = 'ABORTED'
-                   unstable('Script failed!')
+                   //currentBuild.result = 'ABORTED'
+                   unstable('No was Selected!')
     //error('Stopping early…')
                 }
        
