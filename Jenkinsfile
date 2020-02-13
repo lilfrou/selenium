@@ -209,7 +209,8 @@ pipeline {
                 
                  }
                 if( "${USER_INPUT1}" == "No"){
-                    sh"exit 1"
+                   currentBuild.result = 'ABORTED'
+    error('Stopping early…')
                 }
        
             if( "${USER_INPUT1}" == "Yes"){
