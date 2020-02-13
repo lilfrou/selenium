@@ -234,15 +234,7 @@ pipeline {
           steps{  
                 script{
                 cleanWs()
-                    if(analyse=="false"){
-                         try {
-        // do something that fails
-        sh "exit 1"
-        currentBuild.result = 'SUCCESS'
-    } catch (Exception err) {
-        currentBuild.result = 'FAILURE'
-    }
-                   
+                    currentBuild.result = 'SUCCESS'
                     }
                  
                 }
