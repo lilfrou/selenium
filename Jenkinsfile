@@ -210,7 +210,7 @@ pipeline {
                  }
                 if( "${USER_INPUT1}" == "No"){
                    currentBuild.result = 'ABORTED'
-                    stageResult."{STAGE_NAME}" = "UNSTABLE"
+                    currentStage.result =  'ABORTED'
     //error('Stopping early…')
                 }
        
