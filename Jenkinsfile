@@ -24,6 +24,7 @@ pipeline {
                 branch 'Develop'
             }  
              steps {
+                 sh'echo "\033[1;31m[Error]   \033[0m $1"'
               sh "mvn install -DskipTests"        
         }
     } 
@@ -138,11 +139,11 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'Reminder - the Stage will abort itself soon',
-                description: "You Have '${j}' Trys Left"]])
+                         name: "Reminder - the Stage will abort itself soon",
+                description: "Wrong Password! \nYou Have '${j}' Trys Left"]])
                     i++;
                        if(i==3 && ("${userInput1}" != "${password}")){
-                      unstable('Sending email to admin !')
+                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                     sh"exit 1"
                     }
                    }
@@ -206,7 +207,7 @@ pipeline {
                     l++;
                        if(l==3 && ("${userInput2}" != "${password}")){
                           
-                    unstable('Sending email to admin !')
+                     unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                           sh"exit 1"
                     }
              
@@ -273,7 +274,7 @@ pipeline {
                     m++;
                        if(m==3 && ("${userInput3}" != "${password}")){
                           
-                    unstable('Sending email to admin !')
+                     unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                           sh"exit 1"
                     }
              
