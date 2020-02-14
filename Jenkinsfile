@@ -139,7 +139,7 @@ pipeline {
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
                          name: 'Reminder - the Stage will abort itself soon',
-                description: "You Have '${j}' Trys Left"]])
+                description: "'\033[1;31m[Wrong Password!]   \033[0m $1' \nYou Have '${j}' Trys Left"]])
                     i++;
                        if(i==3 && ("${userInput1}" != "${password}")){
                       unstable('Sending email to admin !')
@@ -202,7 +202,7 @@ pipeline {
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
                          name: 'Reminder - the Stage will abort itself soon',
-                description: "Wrong Password! \nYou Have '${k}' Trys Left"]])
+                description: "'\033[1;31m[Wrong Password!]   \033[0m $1' \nYou Have '${k}' Trys Left"]])
                     l++;
                        if(l==3 && ("${userInput2}" != "${password}")){
                           
