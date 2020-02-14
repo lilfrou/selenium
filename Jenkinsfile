@@ -240,7 +240,7 @@ pipeline {
             timeout(time: 1, unit: 'MINUTES') {
                 
              USER_INPUT2 = input(
-                    message: 'Are you sure you want to Deploy to the PROD Envireronment?',
+                    message: 'Do you want to Store backup to nexus ?',
                     parameters: [
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Yes','No'].join('\n'),
@@ -266,7 +266,7 @@ pipeline {
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
                          name: 'Reminder - the pipeline will abort itself soon',
-                description: "Wrong Password! \nYou Have '${k}' Trys Left"]])
+                description: "Wrong Password! \nYou Have '${n}' Trys Left"]])
                     m++;
                        if(m==3 && ("${userInput3}" != "${password}")){
                           
