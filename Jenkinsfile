@@ -24,7 +24,7 @@ pipeline {
                 branch 'Develop'
             }  
              steps {
-                 sh'echo "\033[1;33m[Info]    \033[0m $1"'
+                 sh'echo "\033[1;31m[Error]   \033[0m $1"'
               sh "mvn install -DskipTests"        
         }
     } 
