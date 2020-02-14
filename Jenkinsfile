@@ -3,10 +3,14 @@ def USER_INPUT=""
 def userInput1=""
 def USER_INPUT1=""
 def userInput2=""
+def USER_INPUT2=""
+def userInput3=""
 def i=1
 def j=3
 def l=1
 def k=3
+def m=1
+def n=3
 pipeline {
     agent any
     tools {
@@ -230,10 +234,66 @@ pipeline {
                 branch 'master'
             }  
              steps {
-              sh "echo nexus"        
-        }
+      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
+            script {
+            // Define Variable
+            timeout(time: 1, unit: 'MINUTES') {
+                
+             USER_INPUT2 = input(
+                    message: 'Are you sure you want to Deploy to the PROD Envireronment?',
+                    parameters: [
+                            [$class: 'ChoiceParameterDefinition',
+                             choices: ['Yes','No'].join('\n'),
+                             name: 'input',
+                             description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
+                    ])
+                 if( "${USER_INPUT2}" == "Yes"){
+              withCredentials([string(credentialsId: 'password', variable: 'password')]) {
+                     
+                       userInput3 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'Reminder - the pipeline will abort itself in less then  1 Minute',
+                 description: "You Have '${n}' Trys Left"]])
+               
+                 
+                   while("${userInput3}" != "${password}") { 
+                     n--;
+                    
+                       userInput3 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'Reminder - the pipeline will abort itself soon',
+                description: "Wrong Password! \nYou Have '${k}' Trys Left"]])
+                    m++;
+                       if(m==3 && ("${userInput3}" != "${password}")){
+                          
+                    unstable('Sending email to admin !')
+                          sh"exit 1"
+                    }
+             
+                      
+                         }
+              }
+                
+                 }
+                if( "${USER_INPUT2}" == "No"){
+                   //currentBuild.result = 'ABORTED'
+                   unstable('No was Selected!')
+    //error('Stopping early…')
                 }
-                  
+       
+            if( "${USER_INPUT2}" == "Yes"){
+                sh"mvn -Pprod clean install"
+            }
+              
+            }
+            }
+             }
+           }
+           }
     
          stage('Clean'){     
           steps{  
