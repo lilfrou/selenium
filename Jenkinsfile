@@ -138,7 +138,7 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'Reminder - the Stage will abort itself soon',
+                         name: '"\033[1;31m[Wrong Password!]   \033[0m $1"Reminder - the Stage will abort itself soon',
                 description: '"\033[1;31m[Wrong Password!]   \033[0m $1" \nYou Have "${j}" Trys Left']])
                     i++;
                        if(i==3 && ("${userInput1}" != "${password}")){
