@@ -217,8 +217,8 @@ pipeline {
             }
                 if( "${USER_INPUT1}" == "No"){
                    //currentBuild.result = 'ABORTED'
-                    sh"exit 143"
-                   //unstable('No was Selected!')
+                   
+                   unstable('No was Selected!')
     //error('Stopping early…')
                 }
        
