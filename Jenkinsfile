@@ -202,7 +202,7 @@ pipeline {
                        if(l==3 && ("${userInput2}" != "${password}")){
                           
                     unstable('Sending email to admin !')
-                           sh"exit 1"
+                           return
                     }
              
                       
