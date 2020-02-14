@@ -11,6 +11,9 @@ def l=1
 def k=3
 def m=1
 def n=3
+def fg = 30
+def bg = 46
+def style = "${(char)27}[$fg;$bg"+"m"
 pipeline {
     agent any
     tools {
@@ -24,6 +27,7 @@ pipeline {
                 branch 'Develop'
             }  
              steps {
+                 sh"println(style+"HELLO")"
               sh "mvn install -DskipTests"        
         }
     } 
