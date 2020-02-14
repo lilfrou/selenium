@@ -146,7 +146,7 @@ pipeline {
                     }
                    }
                 }
-                 
+            }
             
             if( "${USER_INPUT}" == "Mirror"){
                 sh"mvn -Pmirror clean install"
@@ -161,7 +161,7 @@ pipeline {
             }
              }
            }
-           }
+           
                 
              
           stage('Release-to-ProD') {
@@ -214,6 +214,7 @@ pipeline {
               }
                 
                  }
+            }
                 if( "${USER_INPUT1}" == "No"){
                    //currentBuild.result = 'ABORTED'
                    unstable('No was Selected!')
@@ -228,7 +229,7 @@ pipeline {
             }
              }
            }
-           }
+           
              stage('nexus-upload') {
                             when {
                 branch 'master'
@@ -279,6 +280,7 @@ pipeline {
               }
                 
                  }
+            }
                 if( "${USER_INPUT2}" == "No"){
                    //currentBuild.result = 'ABORTED'
                    unstable('No was Selected!')
@@ -293,7 +295,7 @@ pipeline {
             }
              }
            }
-           }
+           
     
          stage('Clean'){     
           steps{  
