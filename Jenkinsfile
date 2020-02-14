@@ -118,7 +118,7 @@ pipeline {
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Dev','Mirror'].join('\n'),
                              name: 'input',
-                             description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
+                             description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
                     ])
                 
               withCredentials([string(credentialsId: 'password', variable: 'password')]) {
@@ -127,7 +127,7 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'Reminder - the pipeline will abort itself in less then  1 Minute',
+                         name: 'Reminder - the Stage will abort itself in less then  1 Minute',
                  description: "You Have '${j}' Trys Left"]])
                
                  
@@ -138,7 +138,7 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'Reminder - the pipeline will abort itself soon',
+                         name: 'Reminder - the Stage will abort itself soon',
                 description: "You Have '${j}' Trys Left"]])
                     i++;
                        if(i==3 && ("${userInput1}" != "${password}")){
@@ -181,7 +181,7 @@ pipeline {
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Yes','No'].join('\n'),
                              name: 'input',
-                             description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
+                             description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
                     ])
                  if( "${USER_INPUT1}" == "Yes"){
               withCredentials([string(credentialsId: 'password', variable: 'password')]) {
@@ -190,7 +190,7 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'Reminder - the pipeline will abort itself in less then  1 Minute',
+                         name: 'Reminder - the Stage will abort itself in less then  1 Minute',
                  description: "You Have '${k}' Trys Left"]])
                
                  
@@ -201,7 +201,7 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'Reminder - the pipeline will abort itself soon',
+                         name: 'Reminder - the Stage will abort itself soon',
                 description: "Wrong Password! \nYou Have '${k}' Trys Left"]])
                     l++;
                        if(l==3 && ("${userInput2}" != "${password}")){
@@ -248,7 +248,7 @@ pipeline {
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Yes','No'].join('\n'),
                              name: 'input',
-                             description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
+                             description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
                     ])
                  if( "${USER_INPUT2}" == "Yes"){
               withCredentials([string(credentialsId: 'password', variable: 'password')]) {
@@ -257,7 +257,7 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'Reminder - the pipeline will abort itself in less then  1 Minute',
+                         name: 'Reminder - the Stage will abort itself in less then  1 Minute',
                  description: "You Have '${n}' Trys Left"]])
                
                  
@@ -268,7 +268,7 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'Reminder - the pipeline will abort itself soon',
+                         name: 'Reminder - the Stage will abort itself soon',
                 description: "Wrong Password! \nYou Have '${n}' Trys Left"]])
                     m++;
                        if(m==3 && ("${userInput3}" != "${password}")){
