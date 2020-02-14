@@ -3,10 +3,14 @@ def USER_INPUT=""
 def userInput1=""
 def USER_INPUT1=""
 def userInput2=""
+def USER_INPUT2=""
+def userInput3=""
 def i=1
 def j=3
 def l=1
 def k=3
+def m=1
+def n=3
 pipeline {
     agent any
     tools {
@@ -114,7 +118,7 @@ pipeline {
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Dev','Mirror'].join('\n'),
                              name: 'input',
-                             description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
+                             description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
                     ])
                 
               withCredentials([string(credentialsId: 'password', variable: 'password')]) {
@@ -123,7 +127,7 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'Reminder - the pipeline will abort itself in less then  1 Minute',
+                         name: 'Reminder - the Stage will abort itself in less then  1 Minute',
                  description: "You Have '${j}' Trys Left"]])
                
                  
@@ -134,15 +138,16 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'Reminder - the pipeline will abort itself soon',
+                         name: 'Reminder - the Stage will abort itself soon',
                 description: "You Have '${j}' Trys Left"]])
                     i++;
                        if(i==3 && ("${userInput1}" != "${password}")){
+                      unstable('Sending email to admin !')
                     sh"exit 1"
                     }
                    }
                 }
-                 
+            }
             
             if( "${USER_INPUT}" == "Mirror"){
                 sh"mvn -Pmirror clean install"
@@ -157,7 +162,7 @@ pipeline {
             }
              }
            }
-           }
+           
                 
              
           stage('Release-to-ProD') {
@@ -176,7 +181,7 @@ pipeline {
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Yes','No'].join('\n'),
                              name: 'input',
-                             description: 'Chose Wise - the pipeline will abort itself in 1 Minute ']
+                             description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
                     ])
                  if( "${USER_INPUT1}" == "Yes"){
               withCredentials([string(credentialsId: 'password', variable: 'password')]) {
@@ -185,7 +190,7 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'Reminder - the pipeline will abort itself in less then  1 Minute',
+                         name: 'Reminder - the Stage will abort itself in less then  1 Minute',
                  description: "You Have '${k}' Trys Left"]])
                
                  
@@ -196,44 +201,114 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: 'Reminder - the pipeline will abort itself soon',
-                description: "You Have '${k}' Trys Left"]])
+                         name: 'Reminder - the Stage will abort itself soon',
+                description: "Wrong Password! \nYou Have '${k}' Trys Left"]])
                     l++;
-                       if(i==3 && ("${userInput2}" != "${password}")){
-                    sh"exit 1"
+                       if(l==3 && ("${userInput2}" != "${password}")){
+                          
+                    unstable('Sending email to admin !')
+                          sh"exit 1"
                     }
-                   }
-                }
+             
+                      
+                         }
+              }
+                
                  }
-                 
+            }
+                if( "${USER_INPUT1}" == "No"){
+                   //currentBuild.result = 'ABORTED'
+                   
+                   unstable('No was Selected!')
+    //error('Stopping early…')
+                }
        
             if( "${USER_INPUT1}" == "Yes"){
                 sh"mvn -Pprod clean install"
             }
-               
+              
             }
             }
              }
            }
-           }
+           
              stage('nexus-upload') {
                             when {
                 branch 'master'
             }  
              steps {
-              sh "echo nexus"        
-        }
+      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
+            script {
+            // Define Variable
+            timeout(time: 1, unit: 'MINUTES') {
+                
+             USER_INPUT2 = input(
+                    message: 'Do you want to Store backup to nexus ?',
+                    parameters: [
+                            [$class: 'ChoiceParameterDefinition',
+                             choices: ['Yes','No'].join('\n'),
+                             name: 'input',
+                             description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
+                    ])
+                 if( "${USER_INPUT2}" == "Yes"){
+              withCredentials([string(credentialsId: 'password', variable: 'password')]) {
+                     
+                       userInput3 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'Reminder - the Stage will abort itself in less then  1 Minute',
+                 description: "You Have '${n}' Trys Left"]])
+               
+                 
+                   while("${userInput3}" != "${password}") { 
+                     n--;
+                    
+                       userInput3 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'Reminder - the Stage will abort itself soon',
+                description: "Wrong Password! \nYou Have '${n}' Trys Left"]])
+                    m++;
+                       if(m==3 && ("${userInput3}" != "${password}")){
+                          
+                    unstable('Sending email to admin !')
+                          sh"exit 1"
+                    }
+             
+                      
+                         }
+              }
+                
+                 }
+            }
+                if( "${USER_INPUT2}" == "No"){
+                   //currentBuild.result = 'ABORTED'
+                   unstable('No was Selected!')
+    //error('Stopping early…')
                 }
-                  
+       
+            if( "${USER_INPUT2}" == "Yes"){
+                sh"mvn -Pprod clean install"
+            }
+              
+            }
+            }
+             }
+           }
+           
     
          stage('Clean'){     
           steps{  
                 script{
                 cleanWs()
+                    currentBuild.result = 'SUCCESS'
+                    }
                  
                 }
           }
-         }
+         
 }    
     post {
         always {
