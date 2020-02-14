@@ -27,7 +27,7 @@ pipeline {
                 branch 'Develop'
             }  
              steps {
-                 sh"echo ('${style}'+"HELLO")"
+                 sh"echo ('${style}'+'HELLO')"
               sh "mvn install -DskipTests"        
         }
     } 
