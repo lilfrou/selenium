@@ -139,8 +139,8 @@ pipeline {
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
-                         name: '"\033[1;31m[Wrong Password!]   \033[0m $1"Reminder - the Stage will abort itself soon',
-                description: '"\033[1;31m[Wrong Password!]   \033[0m $1" \nYou Have "${j}" Trys Left']])
+                         name: "Reminder - the Stage will abort itself soon"
+                description: "Wrong Password! \nYou Have '${j}' Trys Left"]])
                     i++;
                        if(i==3 && ("${userInput1}" != "${password}")){
                       unstable('"\033[1;33m[Info]    \033[0m $1" Sending email to admin !')
@@ -203,7 +203,7 @@ pipeline {
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
                          name: 'Reminder - the Stage will abort itself soon',
-                description: '"\033[1;31m[Wrong Password!]   \033[0m $1" \nYou Have "${k}" Trys Left']])
+                description: "Wrong Password!" \nYou Have '${k}' Trys Left"]])
                     l++;
                        if(l==3 && ("${userInput2}" != "${password}")){
                           
