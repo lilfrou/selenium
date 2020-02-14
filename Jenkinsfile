@@ -143,7 +143,7 @@ pipeline {
                 description: "Wrong Password! \nYou Have '${j}' Trys Left"]])
                     i++;
                        if(i==3 && ("${userInput1}" != "${password}")){
-                      unstable('"\033[1;33m[Info]    \033[0m $1" Sending email to admin !')
+                      unstable('"\033[1;33m Sending email to admin !    \033[0m"')
                     sh"exit 1"
                     }
                    }
