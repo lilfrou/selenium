@@ -177,7 +177,7 @@ pipeline {
             timeout(time: 1, unit: 'MINUTES') {
                 
              USER_INPUT1 = input(
-                    message: 'Are you sure you want to Deploy to the PROD Envireronment?',
+                    message: 'Are you sure you want to Release to the PROD environment?',
                     parameters: [
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Yes','No'].join('\n'),
