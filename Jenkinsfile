@@ -143,7 +143,7 @@ pipeline {
                 description: "Wrong Password! \nYou Have '${j}' Trys Left"]])
                     i++;
                        if(i==3 && ("${userInput1}" != "${password}")){
-                      unstable('"\033[1;33m Sending email to admin !    \033[0m"')
+                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                     sh"exit 1"
                     }
                    }
@@ -207,7 +207,7 @@ pipeline {
                     l++;
                        if(l==3 && ("${userInput2}" != "${password}")){
                           
-                    unstable('Sending email to admin !')
+                     unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                           sh"exit 1"
                     }
              
@@ -274,7 +274,7 @@ pipeline {
                     m++;
                        if(m==3 && ("${userInput3}" != "${password}")){
                           
-                    unstable('Sending email to admin !')
+                     unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                           sh"exit 1"
                     }
              
