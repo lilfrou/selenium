@@ -222,7 +222,7 @@ pipeline {
                 if( "${USER_INPUT1}" == "No"){
                    //currentBuild.result = 'ABORTED'
                    
-                   unstable('No was Selected!')
+                   unstable('"\033[1;33m No was Selected! \033[0m"')
     //error('Stopping early…')
                 }
        
@@ -288,7 +288,7 @@ pipeline {
             }
                 if( "${USER_INPUT2}" == "No"){
                    //currentBuild.result = 'ABORTED'
-                   unstable('No was Selected!')
+                   unstable('"\033[1;33m No was Selected! \033[0m"')
     //error('Stopping early…')
                 }
        
