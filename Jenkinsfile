@@ -16,6 +16,7 @@ pipeline {
     tools {
         maven 'maven3.6.1'
         jdk 'jdk'
+        nodejs 'node' 
     }
 
      stages {  
@@ -24,7 +25,9 @@ pipeline {
                 branch 'Develop'
             }  
              steps {
-              sh "mvn install -DskipTests"        
+              sh "mvn install -DskipTests" 
+              sh "cd my-app && npm install"
+              sh "cd my-app && npm run build"   
         }
     } 
             stage('test') {
