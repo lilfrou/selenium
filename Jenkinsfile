@@ -16,6 +16,7 @@ pipeline {
     tools {
         maven 'maven3.6.1'
         jdk 'jdk'
+        nodejs 'node' 
     }
 
      stages {  
@@ -24,8 +25,9 @@ pipeline {
                 branch 'Develop'
             }  
              steps {
-                 sh'echo "\033[1;31m[Error]   \033[0m $1"'
-              sh "mvn install -DskipTests"        
+              sh "mvn install -DskipTests" 
+              sh "cd my-app && npm install"
+              sh "cd my-app && npm run build"   
         }
     } 
             stage('test') {
@@ -177,7 +179,7 @@ pipeline {
             timeout(time: 1, unit: 'MINUTES') {
                 
              USER_INPUT1 = input(
-                    message: 'Are you sure you want to Deploy to the PROD Envireronment?',
+                    message: 'Are you sure you want to Release to the PROD environment?',
                     parameters: [
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Yes','No'].join('\n'),
@@ -313,7 +315,7 @@ pipeline {
 }    
     post {
         always {
-            mail to: 'fmhenni@hrdatabank.com, mhennifiras100@gmail.com', from: 'jenkins',
+            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "${env.JOB_NAME} - Failed", 
                 body: "Job Failed - \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
         }
