@@ -11,6 +11,7 @@ def l=1
 def k=3
 def m=1
 def n=3
+build="true"
 pipeline {
     agent any
     tools {
@@ -24,10 +25,19 @@ pipeline {
                      when {
                 branch 'Develop'
             }  
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      script {  
+                           try { 
              steps {
               sh "mvn install -DskipTests" 
               sh "cd my-app && npm install"
               sh "cd my-app && npm run build"   
+                  } catch (Exception e) {
+                build="false"
+slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}                              }
+                      }
         }
     } 
             stage('test') {
