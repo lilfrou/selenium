@@ -25,10 +25,11 @@ pipeline {
                      when {
                 branch 'Develop'
             }  
+                   steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                       script {  
                            try { 
-             steps {
+            
               sh "mvn install -DskipTests" 
               sh "cd my-app && npm install"
               sh "cd my-app && npm run build"   
