@@ -48,7 +48,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
         }
                   post {
         success {
-            mail to: 'mhennifiras100@gmail.com','fmhenni@hrdatabank.com', from: 'jenkinshr6@gmail.com',
+            mail to: 'mhennifiras100@gmail.com,fmhenni@hrdatabank.com', from: 'jenkinshr6@gmail.com',
                 subject: "${env.JOB_NAME} - Failed", 
                 body: "Job Failed - \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
         }
