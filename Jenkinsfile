@@ -11,10 +11,10 @@ def l=1
 def k=3
 def m=1
 def n=3
-build="true"
-test="true"
-selenium="true"
-javadoc="true"
+def build="true"
+def test="true"
+def selenium="true"
+def javadoc="true"
 
 pipeline {
     agent any
