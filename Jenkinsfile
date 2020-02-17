@@ -12,6 +12,10 @@ def k=3
 def m=1
 def n=3
 build="true"
+test="true"
+selenium="true"
+javadoc="true"
+
 pipeline {
     agent any
     tools {
@@ -35,7 +39,7 @@ pipeline {
               sh "cd my-app && npm run build"   
                   } catch (Exception e) {
                 build="false"
-slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                sh "exit 1"}                              }
                       }
@@ -46,8 +50,16 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 branch 'Develop'
             }  
              steps {
+                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      script {  
+                           try { 
                  sh"mvn test"
-              //sh "mvn -pl !dashboardSelenium test"      
+              //sh "mvn -pl !dashboardSelenium test"  
+                } catch (Exception e) {
+                test="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}                              }
+                 }
         }
     } 
        stage('sonar') {
@@ -94,7 +106,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 branch 'Develop'
             }  
             
-          steps{   
+          steps{ 
+               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      script {  
+                           try { 
                     sh"mvn javadoc:aggregate"   
                     publishHTML (target: [
                                 allowMissing: false,
@@ -105,6 +120,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                                 reportFiles: 'index.html',
                                 reportName: "javadoc"
                                            ])
+                                } catch (Exception e) {
+                javadoc="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}                              }
+                 }
        
            }
          }
@@ -113,7 +133,15 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 branch 'Develop'
             }  
              steps {
-              sh "echo nexus"        
+                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      script {  
+                           try { 
+              sh "echo nexus"  
+                                 } catch (Exception e) {
+                selenium="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}                              }
+                 }
         }
           }
          stage('Deploy to \ndev-mirror') {
