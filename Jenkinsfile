@@ -1,4 +1,3 @@
-def analyse="true"
 def USER_INPUT=""
 def userInput1=""
 def USER_INPUT1=""
@@ -15,7 +14,10 @@ def build="true"
 def test="true"
 def selenium="true"
 def javadoc="true"
-
+def analyse="true"
+def deploy="true"
+def release="true"
+def upload="true"
 pipeline {
     agent any
     tools {
@@ -96,6 +98,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                   
                        } catch (Exception e) {
                 analyse="false"
+   slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")                    
                sh "exit 1"}
                   }
              }
@@ -190,7 +193,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                    }
                 }
             }
-            
+                try{
             if( "${USER_INPUT}" == "Mirror"){
                 sh"mvn -Pmirror clean install"
             }
@@ -200,6 +203,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 else {
                 sh"echo no deploy"
                 }
+                     } catch (Exception e) {
+                deploy="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}    
             }
             }
              }
@@ -264,10 +271,14 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                    unstable('"\033[1;33m No was Selected! \033[0m"')
     //error('Stopping early…')
                 }
-       
+                try{
             if( "${USER_INPUT1}" == "Yes"){
                 sh"mvn -Pprod clean install"
             }
+                     } catch (Exception e) {
+                release="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}    
               
             }
             }
@@ -330,10 +341,14 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                    unstable('"\033[1;33m No was Selected! \033[0m"')
     //error('Stopping early…')
                 }
-       
+                try{
             if( "${USER_INPUT2}" == "Yes"){
                 sh"mvn -Pprod clean install"
             }
+                     } catch (Exception e) {
+                upload="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}    
               
             }
             }
