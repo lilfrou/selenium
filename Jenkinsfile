@@ -35,9 +35,7 @@ pipeline {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                       script {  
                            try { 
-            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "${env.JOB_NAME} - Failed", 
-                body: "Job Failed - \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+      
               sh "mvn install -DskipTests" 
               sh "cd my-app && npm install"
               sh "cd my-app && npm run build"   
@@ -191,6 +189,9 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                     i++;
                        if(i==3 && ("${userInput1}" != "${password}")){
                       unstable('"\033[1;33m Sending email to admin ! \033[0m"')
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "${env.JOB_NAME} - Failed", 
+                body: "Job Failed - \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                     sh"exit 1"
                     }
                    }
@@ -209,6 +210,9 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                      } catch (Exception e) {
                 deploy="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "${env.JOB_NAME} - Failed", 
+                body: "Job Failed - \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                sh "exit 1"}    
             }
             }
