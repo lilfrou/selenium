@@ -190,8 +190,8 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                        if(i==3 && ("${userInput1}" != "${password}")){
                       unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "${env.JOB_NAME} - Failed", 
-                body: "Job Failed - \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                subject: "Security Raison", 
+                body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                     sh"exit 1"
                     }
                    }
