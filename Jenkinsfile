@@ -18,6 +18,9 @@ def analyse="true"
 def deploy="true"
 def release="true"
 def upload="true"
+def p1="true"
+def p2="true"
+def p3="true"
 pipeline {
     agent any
     tools {
@@ -157,7 +160,6 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
             script {
             // Define Variable
             timeout(time: 1, unit: 'MINUTES') {
-                
              USER_INPUT = input(
                     message: 'Whats is the environment you would like to deploy in ?',
                     parameters: [
@@ -192,16 +194,17 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison", 
                 body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-                    sh"exit 1"
+                 p1="false"
+                           return //sh"exit 1"
                     }
                    }
                 }
             }
                 try{
-            if( "${USER_INPUT}" == "Mirror"){
+            if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") ){
                 sh"mvn -Pmirror clean install"
             }
-                else if( "${USER_INPUT}" == "Dev"){
+                else if( ("${USER_INPUT}" == "Dev") && (p1=="true")){
                 sh"mvn -Pdev clean install"
                 }
                 else {
@@ -266,7 +269,8 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison", 
                 body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-                          sh"exit 1"
+                       p2="false"
+                           return
                     }
              
                       
@@ -279,10 +283,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                    //currentBuild.result = 'ABORTED'
                    
                    unstable('"\033[1;33m No was Selected! \033[0m"')
+                    return
     //error('Stopping early…')
                 }
                 try{
-            if( "${USER_INPUT1}" == "Yes"){
+            if( ("${USER_INPUT1}" == "Yes")&&(p2=="true")){
                 sh"mvn -Pprod clean install"
             }
                      } catch (Exception e) {
@@ -340,7 +345,8 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison", 
                 body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-                          sh"exit 1"
+                        p3="false"
+                           return
                     }
              
                       
@@ -352,10 +358,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 if( "${USER_INPUT2}" == "No"){
                    //currentBuild.result = 'ABORTED'
                    unstable('"\033[1;33m No was Selected! \033[0m"')
+                    return
     //error('Stopping early…')
                 }
                 try{
-            if( "${USER_INPUT2}" == "Yes"){
+            if( ("${USER_INPUT2}" == "Yes")&&(p3=="true")){
                 sh"mvn -Pprod clean install"
             }
                      } catch (Exception e) {
@@ -373,7 +380,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
           steps{  
                 script{
                 cleanWs()
-                   
+              
   if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false"){
                        sh "exit 1"  }
                     }
