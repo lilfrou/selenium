@@ -160,7 +160,6 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
             script {
             // Define Variable
             timeout(time: 1, unit: 'MINUTES') {
-                
              USER_INPUT = input(
                     message: 'Whats is the environment you would like to deploy in ?',
                     parameters: [
@@ -202,10 +201,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 }
             }
                 try{
-            if( ("${USER_INPUT}" == "Mirror") &&(p1="true") ){
+            if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") ){
                 sh"mvn -Pmirror clean install"
             }
-                else if( ("${USER_INPUT}" == "Dev") && (p1="true")){
+                else if( ("${USER_INPUT}" == "Dev") && (p1=="true")){
                 sh"mvn -Pdev clean install"
                 }
                 else {
@@ -381,7 +380,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
           steps{  
                 script{
                 cleanWs()
-                   
+              
   if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false"){
                        sh "exit 1"  }
                     }
