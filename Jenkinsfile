@@ -381,7 +381,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 script{
                 cleanWs()
                     if(p1=="false"){
-                        currentBuild.result = 'SUCCESS'   
+                        currentBuild.currentResult = 'SUCCESS'   
                     return } 
   if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false"){
                        sh "exit 1"  }
