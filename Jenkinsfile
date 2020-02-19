@@ -1,4 +1,3 @@
-def analyse="true"
 def USER_INPUT=""
 def userInput1=""
 def USER_INPUT1=""
@@ -11,6 +10,17 @@ def l=1
 def k=3
 def m=1
 def n=3
+def build="true"
+def test="true"
+def selenium="true"
+def javadoc="true"
+def analyse="true"
+def deploy="true"
+def release="true"
+def upload="true"
+def p1="true"
+def p2="true"
+def p3="true"
 pipeline {
     agent any
     tools {
@@ -24,19 +34,38 @@ pipeline {
                      when {
                 branch 'Develop'
             }  
-             steps {
+                   steps {
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      script {  
+                           try { 
+      
               sh "mvn install -DskipTests" 
               sh "cd my-app && npm install"
               sh "cd my-app && npm run build"   
+                  } catch (Exception e) {
+                build="false"
+//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}                              }
+                      }
         }
+                 
     } 
             stage('test') {
                         when {
                 branch 'Develop'
             }  
              steps {
+                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      script {  
+                           try { 
                  sh"mvn test"
-              //sh "mvn -pl !dashboardSelenium test"      
+              //sh "mvn -pl !dashboardSelenium test"  
+                } catch (Exception e) {
+                test="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}                              }
+                 }
         }
     } 
        stage('sonar') {
@@ -73,6 +102,7 @@ pipeline {
                   
                        } catch (Exception e) {
                 analyse="false"
+   slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")                    
                sh "exit 1"}
                   }
              }
@@ -83,7 +113,10 @@ pipeline {
                 branch 'Develop'
             }  
             
-          steps{   
+          steps{ 
+               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      script {  
+                           try { 
                     sh"mvn javadoc:aggregate"   
                     publishHTML (target: [
                                 allowMissing: false,
@@ -94,6 +127,11 @@ pipeline {
                                 reportFiles: 'index.html',
                                 reportName: "javadoc"
                                            ])
+                                } catch (Exception e) {
+                javadoc="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}                              }
+                 }
        
            }
          }
@@ -102,7 +140,15 @@ pipeline {
                 branch 'Develop'
             }  
              steps {
-              sh "echo nexus"        
+                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      script {  
+                           try { 
+              sh "echo nexus"  
+                                 } catch (Exception e) {
+                selenium="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}                              }
+                 }
         }
           }
          stage('Deploy to \ndev-mirror') {
@@ -114,7 +160,6 @@ pipeline {
             script {
             // Define Variable
             timeout(time: 1, unit: 'MINUTES') {
-                
              USER_INPUT = input(
                     message: 'Whats is the environment you would like to deploy in ?',
                     parameters: [
@@ -146,21 +191,34 @@ pipeline {
                     i++;
                        if(i==3 && ("${userInput1}" != "${password}")){
                       unstable('"\033[1;33m Sending email to admin ! \033[0m"')
-                    sh"exit 1"
-                    }
-                   }
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Security Raison Deploying Stage", 
+                body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                 p1="false"
+                           return 
+                          
+                    }  
+              }
+                      
                 }
             }
-            
-            if( "${USER_INPUT}" == "Mirror"){
+                try{
+            if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") ){
                 sh"mvn -Pmirror clean install"
             }
-                else if( "${USER_INPUT}" == "Dev"){
+                else if( ("${USER_INPUT}" == "Dev") && (p1=="true")){
                 sh"mvn -Pdev clean install"
                 }
                 else {
                 sh"echo no deploy"
                 }
+                     } catch (Exception e) {
+                deploy="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Deploying to ${USER_INPUT} ${env.JOB_NAME} - Failed", 
+                body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+               sh "exit 1"}    
             }
             }
              }
@@ -210,7 +268,11 @@ pipeline {
                        if(l==3 && ("${userInput2}" != "${password}")){
                           
                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
-                          sh"exit 1"
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Security Raison Production stage", 
+                body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                       p2="false"
+                           return
                     }
              
                       
@@ -222,13 +284,18 @@ pipeline {
                 if( "${USER_INPUT1}" == "No"){
                    //currentBuild.result = 'ABORTED'
                    
-                   unstable('No was Selected!')
+                   unstable('"\033[1;33m No was Selected! \033[0m"')
+                    return
     //error('Stopping early…')
                 }
-       
-            if( "${USER_INPUT1}" == "Yes"){
+                try{
+            if( ("${USER_INPUT1}" == "Yes")&&(p2=="true")){
                 sh"mvn -Pprod clean install"
             }
+                     } catch (Exception e) {
+                release="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}    
               
             }
             }
@@ -277,7 +344,11 @@ pipeline {
                        if(m==3 && ("${userInput3}" != "${password}")){
                           
                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
-                          sh"exit 1"
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Security Raison Nexus Stage", 
+                body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                        p3="false"
+                           return
                     }
              
                       
@@ -288,13 +359,18 @@ pipeline {
             }
                 if( "${USER_INPUT2}" == "No"){
                    //currentBuild.result = 'ABORTED'
-                   unstable('No was Selected!')
+                   unstable('"\033[1;33m No was Selected! \033[0m"')
+                    return
     //error('Stopping early…')
                 }
-       
-            if( "${USER_INPUT2}" == "Yes"){
+                try{
+            if( ("${USER_INPUT2}" == "Yes")&&(p3=="true")){
                 sh"mvn -Pprod clean install"
             }
+                     } catch (Exception e) {
+                upload="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}    
               
             }
             }
@@ -306,19 +382,15 @@ pipeline {
           steps{  
                 script{
                 cleanWs()
-                    currentBuild.result = 'SUCCESS'
+              
+  if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false"){
+                       sh "exit 1"  }
                     }
                  
                 }
           }
          
 }    
-    post {
-        always {
-            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "${env.JOB_NAME} - Failed", 
-                body: "Job Failed - \"${env.JOB_NAME}\" build: ${env.BUILD_NUMBER}\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-        }
-    }
+   
 
 }
