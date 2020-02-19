@@ -195,7 +195,8 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 subject: "Security Raison", 
                 body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                  p1="false"
-                           return //sh"exit 1"
+                           //return 
+                           sh"exit 1"
                     }  
               }
                        } catch (Exception e) {
