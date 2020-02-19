@@ -202,7 +202,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
             }
                 try{
             if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") ){
-                sh"mvn -Pmirror clean install"
+               mvn// sh"mvn -Pmirror clean install"
             }
                 else if( ("${USER_INPUT}" == "Dev") && (p1=="true")){
                 sh"mvn -Pdev clean install"
