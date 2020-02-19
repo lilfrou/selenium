@@ -18,6 +18,7 @@ def analyse="true"
 def deploy="true"
 def release="true"
 def upload="true"
+def p1="true"
 pipeline {
     agent any
     tools {
@@ -192,13 +193,14 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison", 
                 body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-                  sh"exit 1"
+                 p1="false"
+                           return //sh"exit 1"
                     }
                    }
                 }
             }
                 try{
-            if( "${USER_INPUT}" == "Mirror"){
+            if( ("${USER_INPUT}" == "Mirror") &&(p1="true") ){
                 sh"mvn -Pmirror clean install"
             }
                 else if( "${USER_INPUT}" == "Dev"){
