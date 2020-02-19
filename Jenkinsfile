@@ -160,7 +160,6 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
             script {
             // Define Variable
             timeout(time: 1, unit: 'MINUTES') {
-                
              USER_INPUT = input(
                     message: 'Whats is the environment you would like to deploy in ?',
                     parameters: [
