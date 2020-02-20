@@ -153,7 +153,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
           }
           stage('Deploy-to-Dev') {
                       when {
-                branch 'master'
+                branch 'Develop'
             }  
              steps {
                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
@@ -238,7 +238,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
            }
          stage('Release to mirror-Prod') {
               when {
-                branch 'Deploy'
+                branch 'master'
             }  
              steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
