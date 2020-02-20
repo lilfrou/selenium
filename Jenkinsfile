@@ -246,10 +246,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             // Define Variable
             timeout(time: 1, unit: 'MINUTES') {
              USER_INPUT = input(
-                    message: 'Whats is the environment you would like to deploy in ?',
+                    message: 'Whats is the environment you would like to Release in ?',
                     parameters: [
                             [$class: 'ChoiceParameterDefinition',
-                             choices: ['Dev','Mirror'].join('\n'),
+                             choices: ['Mirror','Prod'].join('\n'),
                              name: 'input',
                              description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
                     ])
@@ -293,8 +293,8 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") ){
                 sh"mvn -Pmirror clean install"
             }
-                else if( ("${USER_INPUT}" == "Dev") && (p1=="true")){
-                sh"mvn -Pdev clean install"
+                else if( ("${USER_INPUT}" == "Prod") && (p1=="true")){
+                sh"mvn -Pprod clean install"
                 }
                 else {
                 sh"echo no deploy"
@@ -303,7 +303,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 deploy="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Deploying to ${USER_INPUT} environement ${env.JOB_NAME} - Failed", 
+                subject: "Releasing to ${USER_INPUT} environement ${env.JOB_NAME} - Failed", 
                 body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                sh "exit 1"}    
             }
