@@ -192,7 +192,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                        if(i==3 && ("${userInput1}" != "${password}")){
                       //unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                            stageResult= 'UNSTABLE'
-                      currentBuild.result = 'SUCCESS'
+                      //currentBuild.result = 'SUCCESS'
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison Deploying Stage ${env.JOB_NAME}", 
                 body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
@@ -206,10 +206,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
             }
                 try{
             if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") ){
-                ls//sh"mvn -Pmirror clean install"
+                sh"mvn -Pmirror clean install"
             }
                 else if( ("${USER_INPUT}" == "Dev") && (p1=="true")){
-                ls//sh"mvn -Pdev clean install"
+                sh"mvn -Pdev clean install"
                 }
                 else {
                 sh"echo no deploy"
