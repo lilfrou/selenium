@@ -297,7 +297,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 }
                 try{
             if( ("${USER_INPUT1}" == "Yes")&&(p2=="true")){
-                sh"mvn -Pprod clean install"
+                ls//sh"mvn -Pprod clean install"
             }
                      } catch (Exception e) {
                 release="false"
@@ -382,7 +382,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 }
                 try{
             if( ("${USER_INPUT2}" == "Yes")&&(p3=="true")){
-                sh"mvn -Pprod clean install"
+               ls// sh"mvn -Pprod clean install"
             }
                      } catch (Exception e) {
                 upload="false"
