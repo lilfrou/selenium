@@ -192,7 +192,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                        if(i==3 && ("${userInput1}" != "${password}")){
                       unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Security Raison Deploying Stage", 
+                subject: "Security Raison Deploying Stage ${env.JOB_NAME}", 
                 body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                  p1="false"
                            return 
@@ -216,12 +216,19 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 deploy="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Deploying to ${USER_INPUT} ${env.JOB_NAME} - Failed", 
+                subject: "Deploying to ${USER_INPUT} environement ${env.JOB_NAME} - Failed", 
                 body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                sh "exit 1"}    
             }
             }
              }
+              post { 
+        success {
+            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "${USER_INPUT} environement  ${env.JOB_NAME} has been Updated- ", 
+                body: " Please verify if every thing is working fine! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+              }
            }
            
                 
@@ -269,7 +276,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                           
                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Security Raison Production stage", 
+                subject: "Security Raison Production stage ${env.JOB_NAME}", 
                 body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                        p2="false"
                            return
@@ -295,11 +302,21 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                      } catch (Exception e) {
                 release="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Deploying to Production environement ${env.JOB_NAME} - Failed", 
+                body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                sh "exit 1"}    
               
             }
             }
              }
+               post { 
+        success {
+            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Production environement  ${env.JOB_NAME} has been Updated- ", 
+                body: " Please verify if every thing is working fine! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+              }
            }
            
              stage('nexus-upload') {
@@ -345,7 +362,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                           
                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Security Raison Nexus Stage", 
+                subject: "Security Raison Nexus Stage ${env.JOB_NAME}", 
                 body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                         p3="false"
                            return
@@ -370,11 +387,21 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                      } catch (Exception e) {
                 upload="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Uploading to Nexus ${env.JOB_NAME} - Failed", 
+                body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                sh "exit 1"}    
               
             }
             }
              }
+                  post { 
+        success {
+            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Nexus backup  ${env.JOB_NAME} has been Updated- ", 
+                body: " Did you stored a snapshot backup for the olderst version! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+              }
            }
            
     
