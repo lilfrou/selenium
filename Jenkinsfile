@@ -291,10 +291,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             }
                 try{
             if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") ){
-                sh"mvn -Pmirror clean install"
+                ls//sh"mvn -Pmirror clean install"
             }
                 else if( ("${USER_INPUT}" == "Prod") && (p1=="true")){
-                sh"mvn -Pprod clean install"
+                ls//sh"mvn -Pprod clean install"
                 }
                 else {
                 sh"echo no deploy"
