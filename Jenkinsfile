@@ -151,7 +151,92 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                  }
         }
           }
-         stage('Deploy to dev-mirror') {
+          stage('Deploy-to-Dev') {
+                      when {
+                branch 'master'
+            }  
+             steps {
+                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
+            script {
+            // Define Variable
+            timeout(time: 1, unit: 'MINUTES') {
+                
+             USER_INPUT1 = input(
+                    message: 'Are you sure you want to Deploy to the Dev environment?',
+                    parameters: [
+                            [$class: 'ChoiceParameterDefinition',
+                             choices: ['Yes','No'].join('\n'),
+                             name: 'input',
+                             description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
+                    ])
+                 if( "${USER_INPUT1}" == "Yes"){
+              withCredentials([string(credentialsId: 'password', variable: 'password')]) {
+                     
+                       userInput2 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'Reminder - the Stage will abort itself in less then  1 Minute',
+                 description: "You Have '${k}' Trys Left"]])
+               
+                 
+                   while("${userInput2}" != "${password}") { 
+                     k--;
+                    
+                       userInput2 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'Reminder - the Stage will abort itself soon',
+                description: "Wrong Password! \nYou Have '${k}' Trys Left"]])
+                    l++;
+                       if(l==3 && ("${userInput2}" != "${password}")){
+                          
+                     unstable('"\033[1;33m Sending email to admin ! \033[0m"')
+                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Security Raison ${env.STAGE_NAME} Stage", 
+                body: "Some-one has typed A Wrong secrect password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                       p2="false"
+                           return
+                    }
+             
+                      
+                         }
+              }
+                
+                 }
+            }
+                if( "${USER_INPUT1}" == "No"){
+                   //currentBuild.result = 'ABORTED'
+                   
+                   unstable('"\033[1;33m No was Selected! \033[0m"')
+                    return
+    //error('Stopping early…')
+                }
+                try{
+            if( ("${USER_INPUT1}" == "Yes")&&(p2=="true")){
+                sh"mvn -Pdev clean install"
+            }
+                     } catch (Exception e) {
+                release="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Deploying to Development environement ${env.JOB_NAME} - Failed", 
+                body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+               sh "exit 1"}    
+              
+            }
+            }
+             }
+               post { 
+        success {
+            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Development environement  ${env.JOB_NAME} has been Updated- ", 
+                body: " Please verify if every thing is working fine! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+              }
+           }
+         stage('Release to mirror-Prod') {
               when {
                 branch 'Deploy'
             }  
@@ -232,95 +317,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
         }
               }
            }
-           
                 
-             
-          stage('Release-to-ProD') {
-                      when {
-                branch 'master'
-            }  
-             steps {
-                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
-            script {
-            // Define Variable
-            timeout(time: 1, unit: 'MINUTES') {
-                
-             USER_INPUT1 = input(
-                    message: 'Are you sure you want to Release to the PROD environment?',
-                    parameters: [
-                            [$class: 'ChoiceParameterDefinition',
-                             choices: ['Yes','No'].join('\n'),
-                             name: 'input',
-                             description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
-                    ])
-                 if( "${USER_INPUT1}" == "Yes"){
-              withCredentials([string(credentialsId: 'password', variable: 'password')]) {
-                     
-                       userInput2 = input(id: 'userInput',
-   message: 'Please type the password?',
-   parameters: [[$class: 'PasswordParameterDefinition',
-                         defaultValue: "",
-                         name: 'Reminder - the Stage will abort itself in less then  1 Minute',
-                 description: "You Have '${k}' Trys Left"]])
-               
-                 
-                   while("${userInput2}" != "${password}") { 
-                     k--;
-                    
-                       userInput2 = input(id: 'userInput',
-   message: 'Please type the password?',
-   parameters: [[$class: 'PasswordParameterDefinition',
-                         defaultValue: "",
-                         name: 'Reminder - the Stage will abort itself soon',
-                description: "Wrong Password! \nYou Have '${k}' Trys Left"]])
-                    l++;
-                       if(l==3 && ("${userInput2}" != "${password}")){
-                          
-                     unstable('"\033[1;33m Sending email to admin ! \033[0m"')
-                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Security Raison ${env.STAGE_NAME} Stage", 
-                body: "Some-one has typed A Wrong secrect password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-                       p2="false"
-                           return
-                    }
-             
-                      
-                         }
-              }
-                
-                 }
-            }
-                if( "${USER_INPUT1}" == "No"){
-                   //currentBuild.result = 'ABORTED'
-                   
-                   unstable('"\033[1;33m No was Selected! \033[0m"')
-                    return
-    //error('Stopping early…')
-                }
-                try{
-            if( ("${USER_INPUT1}" == "Yes")&&(p2=="true")){
-                sh"mvn -Pprod clean install"
-            }
-                     } catch (Exception e) {
-                release="false"
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
-                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Deploying to Production environement ${env.JOB_NAME} - Failed", 
-                body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-               sh "exit 1"}    
-              
-            }
-            }
-             }
-               post { 
-        success {
-            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Production environement  ${env.JOB_NAME} has been Updated- ", 
-                body: " Please verify if every thing is working fine! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-        }
-              }
-           }
-           
              stage('nexus-upload') {
                             when {
                 branch 'master'
