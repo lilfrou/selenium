@@ -280,7 +280,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                     
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison ${env.STAGE_NAME} Stage", 
-                body: "Some-one has typed A Wrong secrect password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: "Some-one has typed A Wrong secrect password 3 Times successively into the ${userInput1} for ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                  p1="false"
                            return 
                           
