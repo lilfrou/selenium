@@ -409,8 +409,13 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
           steps{  
                 script{
                 cleanWs()
+                    if(p1=="false")
+                    {
+                       currentBuild.result = 'SUCCESS'
+                    }
+                    
               
-  if(p1=="false" || build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false"){
+  if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false"){
                        currentBuild.result = 'FAILURE'  }
                     }
                  
