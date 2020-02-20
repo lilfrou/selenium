@@ -313,7 +313,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                post { 
         success {
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "${USER_INPUT1} environement  ${env.JOB_NAME} has been Updated- ", 
+                subject: "Production environement  ${env.JOB_NAME} has been Updated- ", 
                 body: " Please verify if every thing is working fine! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
         }
               }
@@ -387,11 +387,21 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                      } catch (Exception e) {
                 upload="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Uploading to Nexus ${env.JOB_NAME} - Failed", 
+                body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                sh "exit 1"}    
               
             }
             }
              }
+                  post { 
+        success {
+            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Nexus backup  ${env.JOB_NAME} has been Updated- ", 
+                body: " Did you stored a snapshot backup for the olderst version! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+              }
            }
            
     
