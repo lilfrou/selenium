@@ -190,8 +190,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 description: "Wrong Password! \nYou Have '${j}' Trys Left"]])
                     i++;
                        if(i==3 && ("${userInput1}" != "${password}")){
+                           currentBuild.result = "SUCCESS"
+        stageResult."{STAGE_NAME}" = "UNSTABLE"
                       //unstable('"\033[1;33m Sending email to admin ! \033[0m"')
-                           stageResult= 'UNSTABLE'
+                           //stageResult= 'UNSTABLE'
                       //currentBuild.result = 'SUCCESS'
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison Deploying Stage ${env.JOB_NAME}", 
@@ -411,11 +413,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
           steps{  
                 script{
                 cleanWs()
-                    if(p1=="false")
-                    {
-                       currentBuild.result = 'SUCCESS'
-                    }
-                    
+                   
               
   if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false"){
                        currentBuild.result = 'FAILURE'  }
