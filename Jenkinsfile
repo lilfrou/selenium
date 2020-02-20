@@ -151,7 +151,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                  }
         }
           }
-         stage('Deploy to \ndev-mirror') {
+         stage('Deploy to dev-mirror') {
               when {
                 branch 'Deploy'
             }  
