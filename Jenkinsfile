@@ -45,7 +45,7 @@ pipeline {
                   } catch (Exception e) {
                 build="false"
 //slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                sh "exit 1"}                              }
                       }
         }
@@ -63,7 +63,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
               //sh "mvn -pl !dashboardSelenium test"  
                 } catch (Exception e) {
                 test="false"
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                sh "exit 1"}                              }
                  }
         }
@@ -102,7 +102,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                   
                        } catch (Exception e) {
                 analyse="false"
-   slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")                    
+   slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")                    
                sh "exit 1"}
                   }
              }
@@ -129,7 +129,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                                            ])
                                 } catch (Exception e) {
                 javadoc="false"
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                sh "exit 1"}                              }
                  }
        
@@ -146,7 +146,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
               sh "echo nexus"  
                                  } catch (Exception e) {
                 selenium="false"
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                sh "exit 1"}                              }
                  }
         }
@@ -216,7 +216,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                 }
                      } catch (Exception e) {
                 deploy="false"
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Deploying to ${USER_INPUT} environement ${env.JOB_NAME} - Failed", 
                 body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
@@ -277,9 +277,9 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                        if(l==3 && ("${userInput2}" != "${password}")){
                           
                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
-                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Security Raison Production stage ${env.JOB_NAME}", 
-                body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Security Raison ${env.STAGE_NAME} Stage", 
+                body: "Some-one has typed A Wrong secrect password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                        p2="false"
                            return
                     }
@@ -303,7 +303,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
             }
                      } catch (Exception e) {
                 release="false"
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Deploying to Production environement ${env.JOB_NAME} - Failed", 
                 body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
@@ -363,9 +363,9 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                        if(m==3 && ("${userInput3}" != "${password}")){
                           
                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
-                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Security Raison Nexus Stage ${env.JOB_NAME}", 
-                body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Security Raison ${env.STAGE_NAME} Stage", 
+                body: "Some-one has typed A Wrong secrect password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                         p3="false"
                            return
                     }
@@ -388,7 +388,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
             }
                      } catch (Exception e) {
                 upload="false"
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Uploading to Nexus ${env.JOB_NAME} - Failed", 
                 body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
@@ -401,7 +401,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
         success {
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Nexus backup  ${env.JOB_NAME} has been Updated- ", 
-                body: " Did you stored a snapshot backup for the olderst version! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: " Did you stored a snapshot backup for the oldest version! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
         }
               }
            }
