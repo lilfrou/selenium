@@ -195,7 +195,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                  mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison ${env.STAGE_NAME} Stage", 
-                body: "Some-one has typed A Wrong secrect password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: "Some-one has typed A Wrong secret password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                        p2="false"
                            return
                     }
@@ -280,7 +280,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                     
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison ${env.STAGE_NAME} Stage", 
-                body: "Some-one has typed A Wrong secrect password 3 Times successively into the ${userInput1} for ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: "Some-one has typed A Wrong secret password 3 Times successively for the ${USER_INPUT} environment for ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                  p1="false"
                            return 
                           
@@ -362,7 +362,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                  mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison ${env.STAGE_NAME} Stage", 
-                body: "Some-one has typed A Wrong secrect password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: "Some-one has typed A Wrong secret password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                         p3="false"
                            return
                     }
