@@ -45,7 +45,7 @@ pipeline {
                   } catch (Exception e) {
                 build="false"
 //slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUILD & TESTS STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                sh "exit 1"}                              }
                       }
         }
@@ -194,8 +194,8 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "BUIL
                       unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                     
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Security Raison ${env.STAGE_NAME} ${env.JOB_NAME}", 
-                body: "Some-one has typed A Wrong secrect password 3 Times successively !\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                subject: "Security Raison ${env.STAGE_NAME} Stage", 
+                body: "Some-one has typed A Wrong secrect password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                  p1="false"
                            return 
                           
