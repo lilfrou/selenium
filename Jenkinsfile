@@ -215,7 +215,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 }
                 try{
             if( ("${USER_INPUT1}" == "Yes")&&(p2=="true")){
-                ls//sh"mvn -Pdev clean install"
+                sh"mvn -Pdev clean install"
             }
                      } catch (Exception e) {
                 release="false"
