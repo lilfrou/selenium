@@ -224,6 +224,9 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 sh"mvn -Pdev clean install"
                 
             }
+                    else{
+                        sh"echo NO Deploy"
+                    }
                      } catch (Exception e) {
                 release="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
@@ -318,7 +321,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
 }
                 }
                 else {
-                sh"echo no deploy"
+                sh"echo no Release"
                 }
                      } catch (Exception e) {
                 deploy="false"
@@ -407,6 +410,9 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             if( ("${USER_INPUT2}" == "Yes")&&(p3=="true")){
                 sh"mvn -Pprod clean install"
             }
+                    else{
+                        sh"no nexus Uploading"
+                    }
                      } catch (Exception e) {
                 upload="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
