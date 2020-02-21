@@ -34,7 +34,17 @@ pipeline {
             description: '',
             name: 'REQUESTED_ACTION')
     }*/
-     stages {  
+     stages { 
+         stage('Cron')
+         when {
+                branch 'Cron'
+            }  
+         {
+             steps{
+                 sh"chmod +x hello.sh"
+                 sh "./hello.sh"
+             }
+         }
               stage('build') {
                                           when {
                 branch 'Develop'
