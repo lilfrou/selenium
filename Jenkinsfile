@@ -321,7 +321,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
              stage('nexus-upload') {
                             when {
                                 expression{
-                                    return BRANCH == 'master';
+                                    env.BRANCH_NAME == 'master';
                                     ("${USER_INPUT}" == "Prod") && (p1=="true");
                                 }
             }  
