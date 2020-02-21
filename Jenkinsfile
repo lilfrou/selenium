@@ -337,7 +337,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
         success {
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "${USER_INPUT} environement  ${env.JOB_NAME} has been Updated- ", 
-                body: " Please verify if every thing is working fine! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: " Please verify if every thing is working fine! \n\n http://192.168.1.100/ \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
         }
               }
            }
