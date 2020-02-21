@@ -345,9 +345,9 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
              stage('nexus-upload') {
                             when {
                                 expression{
-                                    env.BRANCH_NAME == 'master';
-                                    ("${USER_INPUT}" == "Prod") && (p1=="true");
-                                    release=="true";
+                                    
+          (release=="true") && (env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true");
+                                    
                                 }
             }  
              steps {
