@@ -32,7 +32,8 @@ pipeline {
      stages {  
               stage('build') {
                      when {
-                branch 'Develop'
+                branch 'Develop';
+                branch 'master'
             }  
                    steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -294,7 +295,12 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 sh"mvn -Pmirror clean install"
             }
                 else if( ("${USER_INPUT}" == "Prod") && (p1=="true")){
-                sh"mvn -Pprod clean install"
+               sshagent(['firas-pem']) {
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo pkill -9 java;sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps/ROOT*"'
+ sh 'scp -o StrictHostKeyChecking=no myproject/target/*.war root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps/'
+ sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
+
+}
                 }
                 else {
                 sh"echo no deploy"
