@@ -35,11 +35,11 @@ pipeline {
             name: 'REQUESTED_ACTION')
     }*/
      stages { 
-         stage('Cron')
+         stage('Cron'){
          when {
                 branch 'Cron'
             }  
-         {
+         
              steps{
                  sh"chmod +x hello.sh"
                  sh "./hello.sh"
