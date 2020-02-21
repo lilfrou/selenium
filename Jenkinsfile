@@ -298,8 +298,8 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 else if( ("${USER_INPUT}" == "Prod") && (p1=="true")){
                sshagent(['firas-pem']) {
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo pkill -9 java;sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps/ROOT*"'
- sh 'scp -o StrictHostKeyChecking=no myproject/target/*.war root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps/'
- sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
+ sh 'scp -o StrictHostKeyChecking=no myproject/target/*.war root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps/ROOT'
+ sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps/ROOT; sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
 
 }
                 }
