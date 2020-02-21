@@ -28,12 +28,12 @@ pipeline {
         jdk 'jdk'
         nodejs 'node' 
     }
-parameters {
+/**parameters {
         choice(
             choices: ['greeting' , 'silence'],
             description: '',
             name: 'REQUESTED_ACTION')
-    }
+    }*/
      stages {  
               stage('build') {
                                           when {
