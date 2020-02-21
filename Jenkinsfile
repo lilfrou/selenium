@@ -320,7 +320,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 
              stage('nexus-upload') {
                             when {
-                branch 'master'
+                                expression{
+                                    return BRANCH == 'master';
+                                    ("${USER_INPUT}" == "Prod") && (p1=="true");
+                                }
             }  
              steps {
       catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
