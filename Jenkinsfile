@@ -228,7 +228,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                         sh"echo NO Deploy"
                     }
                      } catch (Exception e) {
-                release="false"
+                deploy="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Deploying to Developement environement ${env.JOB_NAME} - Failed", 
@@ -315,7 +315,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
 }
                       sshagent(['firas-pem']) {
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps2/ROOT*"'
- sh 'scp -o StrictHostKeyChecking=no my-app/dist root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps2/ROOT'
+ sh 'scp -r -o StrictHostKeyChecking=no my-app/dist root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps2/ROOT'
  sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps2/*ROOT; sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
 
 }
@@ -324,7 +324,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 sh"echo no Release"
                 }
                      } catch (Exception e) {
-                deploy="false"
+                release="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Releasing to ${USER_INPUT} environement ${env.JOB_NAME} - Failed", 
@@ -347,6 +347,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                                 expression{
                                     env.BRANCH_NAME == 'master';
                                     ("${USER_INPUT}" == "Prod") && (p1=="true");
+                                    release=="true";
                                 }
             }  
              steps {
