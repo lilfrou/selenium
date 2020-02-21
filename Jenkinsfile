@@ -381,7 +381,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 }
                 try{
             if( ("${USER_INPUT2}" == "Yes")&&(p3=="true")){
-                ls//sh"mvn -Pprod clean install"
+                sh"mvn -Pprod clean install"
             }
                      } catch (Exception e) {
                 upload="false"
