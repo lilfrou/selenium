@@ -31,9 +31,11 @@ pipeline {
 
      stages {  
               stage('build') {
-                     when {
-                branch 'Develop'
-                branch 'master'
+                when {
+                                expression{
+                                    env.BRANCH_NAME == 'master';
+                                    env.BRANCH_NAME == 'Develop'; 
+                                }
             }  
                    steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
