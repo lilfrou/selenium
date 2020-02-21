@@ -228,7 +228,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                         sh"echo NO Deploy"
                     }
                      } catch (Exception e) {
-                release="false"
+                deploy="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Deploying to Developement environement ${env.JOB_NAME} - Failed", 
@@ -324,7 +324,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 sh"echo no Release"
                 }
                      } catch (Exception e) {
-                deploy="false"
+                release="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Releasing to ${USER_INPUT} environement ${env.JOB_NAME} - Failed", 
@@ -347,6 +347,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                                 expression{
                                     env.BRANCH_NAME == 'master';
                                     ("${USER_INPUT}" == "Prod") && (p1=="true");
+                                    release=="true";
                                 }
             }  
              steps {
