@@ -346,7 +346,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                             when {
                                 expression{
                                     
-          ((release=="true") && (env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true")) || ((release=="true") && (env.BRANCH_NAME == 'master'));
+    ((release=="true") && (env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true")) || ((release=="true") && (env.BRANCH_NAME == 'master') && (currentBuild.result == 'ABORTED'));
                                     
                                 }
             }  
