@@ -32,7 +32,7 @@ pipeline {
      stages {  
               stage('build') {
                      when {
-                branch 'Develop';
+                branch 'Develop'
                 branch 'master'
             }  
                    steps {
