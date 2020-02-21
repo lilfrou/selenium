@@ -298,7 +298,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                sh"mvn -Pprod clean install"
                sshagent(['firas-pem']) {
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo pkill -9 java;sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps/ROOT*"'
- sh 'scp -o StrictHostKeyChecking=no myproject/target/*.war root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps/ROOT'
+ sh 'scp -o StrictHostKeyChecking=no myproject/target/*.war root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps/ROOT.war'
  sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps/ROOT; sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
 
 }
