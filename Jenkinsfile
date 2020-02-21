@@ -221,7 +221,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 release="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Deploying to Development environement ${env.JOB_NAME} - Failed", 
+                subject: "Deploying to Developement environement ${env.JOB_NAME} - Failed", 
                 body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                sh "exit 1"}    
               
