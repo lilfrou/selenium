@@ -28,7 +28,12 @@ pipeline {
         jdk 'jdk'
         nodejs 'node' 
     }
-
+/**parameters {
+        choice(
+            choices: ['greeting' , 'silence'],
+            description: '',
+            name: 'REQUESTED_ACTION')
+    }*/
      stages {  
               stage('build') {
                                           when {
@@ -40,7 +45,7 @@ pipeline {
                       script {  
                            try { 
       
-              sh "mvn install -DskipTests" 
+              sh "mvn -Pdev clean install -DskipTests" 
               sh "cd my-app && npm install"
               sh "cd my-app && npm run build"   
                   } catch (Exception e) {
@@ -217,6 +222,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 try{
             if( ("${USER_INPUT1}" == "Yes")&&(p2=="true")){
                 sh"mvn -Pdev clean install"
+                
             }
                      } catch (Exception e) {
                 release="false"
@@ -296,10 +302,18 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             }
                 else if( ("${USER_INPUT}" == "Prod") && (p1=="true")){
                sh"mvn -Pprod clean install"
+               sh "cd my-app && npm install"
+               sh "cd my-app && npm run build"
                sshagent(['firas-pem']) {
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo pkill -9 java;sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps/ROOT*"'
  sh 'scp -o StrictHostKeyChecking=no myproject/target/*.war root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps/ROOT.war'
- sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps/*.war; sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
+ sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps/*.war"'
+
+}
+                      sshagent(['firas-pem']) {
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo pkill -9 java;sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps2/ROOT*"'
+ sh 'scp -o StrictHostKeyChecking=no my-app/dist root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps2/ROOT'
+ sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps2/*ROOT; sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
 
 }
                 }
