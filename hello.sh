@@ -1,5 +1,5 @@
 #!/bin/bash
-url='http://localhost:8081/'
+url='http://192.168.1.100/'
 attempts=5
 timeout=5
 online=false
