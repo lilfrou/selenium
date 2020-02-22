@@ -37,7 +37,7 @@ pipeline {
      stages {  
               stage('build') {
                                           when {
-                branch 'Develop'
+                branch 'develop-home'
             }  
           
                    steps {
@@ -59,7 +59,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     } 
             stage('test') {
                         when {
-                branch 'Develop'
+                branch 'develop-home'
             }  
              steps {
                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -116,7 +116,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
           }   
            stage('javadoc'){   
                        when {
-                branch 'Develop'
+                branch 'develop-home'
             }  
             
           steps{ 
@@ -159,7 +159,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
           }
           stage('Deploy-to-Dev') {
                       when {
-                branch 'Develop'
+                branch 'develop-home'
             }  
              steps {
                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
@@ -248,7 +248,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
            }
          stage('Release to mirror-Prod') {
               when {
-                branch 'master'
+                branch 'master-home'
             }  
              steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
@@ -346,7 +346,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                             when {
                                 expression{
                                     
-    ((release=="true") && (env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true")) || ((release=="true") && (env.BRANCH_NAME == 'master') && (currentBuild.result == 'ABORTED'));
+    ((release=="true") && (env.BRANCH_NAME == 'master-home') && ("${USER_INPUT}" == "Prod") && (p1=="true")) || ((release=="true") && (env.BRANCH_NAME == 'master-home') && (currentBuild.result == 'ABORTED'));
                                     
                                 }
             }  
