@@ -91,7 +91,8 @@ pipeline {
             }
               }
              }
-         
+         }}
+    /**     
               stage('build') {
                                           when {
                 expression{
@@ -475,7 +476,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                  
                 }
           }
-         
+         }
 }    
    
 
