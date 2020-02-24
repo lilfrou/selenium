@@ -376,11 +376,17 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 
                  }
             }
+                if( "${USER_INPUT2}" == "No"){
+                   //currentBuild.result = 'ABORTED'
+                   unstable('"\033[1;33m No was Selected! \033[0m"')
+                    return
+    //error('Stopping early…')
+                }
                 try{
-            if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") &&(build=="true")  ){
+            if( ("${USER_INPUT}" == "Mirror") &&(p1=="true")&&(USER_INPUT3=="Yes") &&(build=="true")  ){
                 sh"mvn -Pmirror clean install"
             }
-                else if( ("${USER_INPUT}" == "Prod") && (p1=="true")&&(build=="true")){
+                else if( ("${USER_INPUT}" == "Prod") &&(USER_INPUT3=="Yes")&& (p1=="true")&&(build=="true")){
              
                sshagent(['firas-pem']) {
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo pkill -9 java;sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps/ROOT*"'
