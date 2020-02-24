@@ -35,19 +35,93 @@ pipeline {
             name: 'REQUESTED_ACTION')
     }*/
      stages {  
+         stage("Verify Mirror-ProD"){
+             when {
+                branch 'master'
+            }  
+             steps {
+              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
+            script {
+            // Define Variable
+            timeout(time: 1, unit: 'MINUTES') {
+             USER_INPUT = input(
+                    message: 'Whats is the environment you would like to Release in ?',
+                    parameters: [
+                            [$class: 'ChoiceParameterDefinition',
+                             choices: ['Mirror','Prod'].join('\n'),
+                             name: 'input',
+                             description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
+                    ])
+                
+              withCredentials([string(credentialsId: 'password', variable: 'password')]) {
+                     
+                       userInput1 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'Reminder - the Stage will abort itself in less then  1 Minute',
+                 description: "You Have '${j}' Trys Left"]])
+               
+                 
+                   while("${userInput1}" != "${password}") { 
+                     j--;
+                    
+                       userInput1 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: "Reminder - the Stage will abort itself soon",
+                description: "Wrong Password! \nYou Have '${j}' Trys Left"]])
+                    i++;
+                       if(i==3 && ("${userInput1}" != "${password}")){
+          
+                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
+                    
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Security Raison ${env.STAGE_NAME} Stage", 
+                body: "Some-one has typed A Wrong secret password 3 Times successively for the ${USER_INPUT} environment for ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                 p1="false"
+                           return 
+                          
+                    }  
+              }
+                      
+                }
+            }
+            }
+              }
+         
               stage('build') {
                                           when {
-                branch 'Develop'
+                expression{
+                    !env.BRANCH_NAME.contains("PR-")
+                }
             }  
           
                    steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                       script {  
                            try { 
-      
+      if (env.BRANCH_NAME=="Develop")
+                               {
               sh "mvn -Pdev clean install -DskipTests" 
               sh "cd my-app && npm install"
-              sh "cd my-app && npm run build"   
+                                   sh "cd my-app && npm run build" }
+                               else if((env.BRANCH_NAME=="master") && ("${USER_INPUT}" == "Mirror") &&(p1=="true") )
+                               {
+                                  sh "mvn -Pmirror clean install -DskipTests" 
+              sh "cd my-app && npm install"
+                                   sh "cd my-app && npm run build"  
+                               }
+                               else if((env.BRANCH_NAME=="master") && ("${USER_INPUT}" == "Prod") &&(p1=="true"))
+                               {
+                                   sh "mvn -Pprod clean install -DskipTests" 
+              sh "cd my-app && npm install"
+                                   sh "cd my-app && npm run build"  
+                               }
+                               else{
+                                   sh"echo no build allowed"
+                               }
                   } catch (Exception e) {
                 build="false"
 //slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
@@ -253,60 +327,13 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
              steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
             script {
-            // Define Variable
-            timeout(time: 1, unit: 'MINUTES') {
-             USER_INPUT = input(
-                    message: 'Whats is the environment you would like to Release in ?',
-                    parameters: [
-                            [$class: 'ChoiceParameterDefinition',
-                             choices: ['Mirror','Prod'].join('\n'),
-                             name: 'input',
-                             description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
-                    ])
-                
-              withCredentials([string(credentialsId: 'password', variable: 'password')]) {
-                     
-                       userInput1 = input(id: 'userInput',
-   message: 'Please type the password?',
-   parameters: [[$class: 'PasswordParameterDefinition',
-                         defaultValue: "",
-                         name: 'Reminder - the Stage will abort itself in less then  1 Minute',
-                 description: "You Have '${j}' Trys Left"]])
-               
-                 
-                   while("${userInput1}" != "${password}") { 
-                     j--;
-                    
-                       userInput1 = input(id: 'userInput',
-   message: 'Please type the password?',
-   parameters: [[$class: 'PasswordParameterDefinition',
-                         defaultValue: "",
-                         name: "Reminder - the Stage will abort itself soon",
-                description: "Wrong Password! \nYou Have '${j}' Trys Left"]])
-                    i++;
-                       if(i==3 && ("${userInput1}" != "${password}")){
-          
-                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
-                    
-                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Security Raison ${env.STAGE_NAME} Stage", 
-                body: "Some-one has typed A Wrong secret password 3 Times successively for the ${USER_INPUT} environment for ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-                 p1="false"
-                           return 
-                          
-                    }  
-              }
-                      
-                }
-            }
+           
                 try{
-            if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") ){
+            if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") &&(build=="true")  ){
                 sh"mvn -Pmirror clean install"
             }
-                else if( ("${USER_INPUT}" == "Prod") && (p1=="true")){
-               sh"mvn -Pprod clean install"
-               sh "cd my-app && npm install"
-               sh "cd my-app && npm run build"
+                else if( ("${USER_INPUT}" == "Prod") && (p1=="true")&&(build=="true")){
+             
                sshagent(['firas-pem']) {
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo pkill -9 java;sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps/ROOT*"'
  sh 'scp -o StrictHostKeyChecking=no myproject/target/*.war root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps/ROOT.war'
