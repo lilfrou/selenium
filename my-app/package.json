@@ -9,6 +9,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+  "publishConfig": {
+    "registry": "http://192.168.1.45:8081/repository/npm-private/"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~9.0.0",
