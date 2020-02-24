@@ -153,9 +153,13 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     } 
        stage('sonar') {
               when {
-                 expression{
-        (!env.BRANCH_NAME=="Test-selenium") || (!env.BRANCH_NAME=="Cron") 
-                }
+                  not {
+          anyOf {
+            branch 'Test-selenium';
+            branch 'Cron'
+          }
+       }
+                
             }  
 
              steps {
