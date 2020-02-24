@@ -500,6 +500,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 try{
             if( ("${USER_INPUT2}" == "Yes")&&(p3=="true") &&(build=="true")){
                 sh"mvn -Pprod deploy"
+                sh"cd my-app && npm publish"
             }
                     else{
                         sh"no nexus Uploading"
