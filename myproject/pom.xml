@@ -3,11 +3,11 @@
   <parent>
         <groupId>seleniumparent</groupId>
         <artifactId>seleniumparent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.1</version>
     </parent>
   <groupId>myproject</groupId>
   <artifactId>myproject</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <packaging>war</packaging>
   <dependencies>
   <dependency>
