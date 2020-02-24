@@ -312,7 +312,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 if( (env.BRANCH_NAME == 'Develop') && (build=="true") && (deploy=="true")&&("${USER_INPUT1}" == "Yes")&&(p2=="true")){
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Developement environement  ${env.JOB_NAME} has been Updated- ", 
-                body: " Please verify if every thing is working fine! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: " Please verify if every thing is working fine! \n\nhttp://192.168.1.100/devlien \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
         }
             }
         }
