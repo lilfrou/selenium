@@ -96,10 +96,11 @@ pipeline {
         
               stage('build') {
                                           when {
+                                               not {
                                              expression{
-     (!env.BRANCH_NAME.contains("PR-")) || (env.BRANCH_NAME!="Test-selenium") || (!env.BRANCH_NAME!="Cron") ;
+     (env.BRANCH_NAME.contains("PR-")) || (env.BRANCH_NAME=="Test-selenium") || (env.BRANCH_NAME=="Cron") ;
                 }
-               
+                                               }
             }  
           
                    steps {
@@ -135,9 +136,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     } 
             stage('test') {
                         when {
-                 expression{
-                     (!env.BRANCH_NAME.contains("PR-")) || (!env.BRANCH_NAME=="Test-selenium") || (!env.BRANCH_NAME=="Cron") ;
+                  not {
+                                             expression{
+     (env.BRANCH_NAME.contains("PR-")) || (env.BRANCH_NAME=="Test-selenium") || (env.BRANCH_NAME=="Cron") ;
                 }
+                                               }
             }  
              steps {
                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -200,9 +203,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
           }   
            stage('javadoc'){   
                     when {
-                 expression{
-     (!env.BRANCH_NAME.contains("PR-")) || (!env.BRANCH_NAME=="Test-selenium") || (!env.BRANCH_NAME=="Cron") ;
+                 not {
+                                             expression{
+     (env.BRANCH_NAME.contains("PR-")) || (env.BRANCH_NAME=="Test-selenium") || (env.BRANCH_NAME=="Cron") ;
                 }
+                                               }
             }  
             
           steps{ 
@@ -245,7 +250,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
           }
           stage('Deploy-to-Dev') {
                       when {
-                branch 'Develop'
+                 expression{
+                                    
+    (env.BRANCH_NAME == 'Develop') && (build=="true");
+              }               
             }  
              steps {
                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
