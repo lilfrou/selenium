@@ -127,6 +127,7 @@ pipeline {
                                    sh "cd my-app && npm run build" }
                                else {
                                    unstable('"\033[1;33m No build allowed ! \033[0m"')
+                                   build="false"
                                }
                   } catch (Exception e) {
                 build="false"
