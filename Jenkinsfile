@@ -54,11 +54,7 @@ pipeline {
                              description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
                     ])
                 
-              withCredentials([string(credentialsId: 'password', variable: 'password')]) {
-                     
-                      
-                          
-                    }  
+             
               }
                       
                 }
