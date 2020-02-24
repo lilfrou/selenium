@@ -1,3 +1,4 @@
+def USER_INPUT3=""
 def USER_INPUT=""
 def userInput1=""
 def USER_INPUT1=""
@@ -35,9 +36,41 @@ pipeline {
             name: 'REQUESTED_ACTION')
     }*/
      stages {  
+         stage("Verify Mirror-ProD"){
+             when {
+                branch 'master'
+            }  
+             steps {
+              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
+            script {
+            // Define Variable
+            timeout(time: 1, unit: 'MINUTES') {
+             USER_INPUT = input(
+                    message: 'Whats is the environment you would like to Release in ?',
+                    parameters: [
+                            [$class: 'ChoiceParameterDefinition',
+                             choices: ['Mirror','Prod'].join('\n'),
+                             name: 'input',
+                             description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
+                    ])
+                
+             
+              }
+                      
+                }
+            }
+            }
+              }
+        
+         
+        
               stage('build') {
                                           when {
-                branch 'Develop'
+                                               not {
+                                             expression{
+     (env.BRANCH_NAME.contains("PR-")) || (env.BRANCH_NAME=="Test-selenium") || (env.BRANCH_NAME=="Cron") ;
+                }
+                                               }
             }  
           
                    steps {
@@ -45,9 +78,27 @@ pipeline {
                       script {  
                            try { 
       
+                 if((env.BRANCH_NAME=="master") && ("${USER_INPUT}" == "Mirror") &&(p1=="true") )
+                               {
+                                  sh "mvn -Pmirror clean install -DskipTests" 
+              sh "cd my-app && npm install"
+                                   sh "cd my-app && npm run build"  
+                               }
+                               else if((env.BRANCH_NAME=="master") && ("${USER_INPUT}" == "Prod") &&(p1=="true"))
+                               {
+                                   sh "mvn -Pprod clean install -DskipTests" 
+              sh "cd my-app && npm install"
+                                   sh "cd my-app && npm run build"  
+                               }
+                               else if (env.BRANCH_NAME=="Develop")
+                               {
               sh "mvn -Pdev clean install -DskipTests" 
               sh "cd my-app && npm install"
-              sh "cd my-app && npm run build"   
+                                   sh "cd my-app && npm run build" }
+                               else {
+                                   unstable('"\033[1;33m No build allowed ! \033[0m"')
+                                   build="false"
+                               }
                   } catch (Exception e) {
                 build="false"
 //slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
@@ -59,7 +110,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     } 
             stage('test') {
                         when {
-                branch 'Develop'
+                  not {
+                                             expression{
+     (env.BRANCH_NAME.contains("PR-")) || (env.BRANCH_NAME=="Test-selenium") || (env.BRANCH_NAME=="Cron") ;
+                }
+                                               }
             }  
              steps {
                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -75,6 +130,15 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
         }
     } 
        stage('sonar') {
+              when {
+                  not {
+          anyOf {
+            branch 'Test-selenium';
+            branch 'Cron'
+          }
+       }
+                
+            }  
 
              steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -93,10 +157,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                     -Dsonar.pullrequest.provider=GitHub \
                     -Dsonar.pullrequest.github.repository=lilfrou/selenium"
                   }
-                        else if((env.BRANCH_NAME=="Deploy")||(env.BRANCH_NAME=="Test-selenium"))
-                  {
-                      echo 'no analyse allowed'
-                  } 
+                        
                  else {
              sh " mvn verify sonar:sonar \
                     -Dsonar.projectKey=lilfrou_selenium \
@@ -115,8 +176,12 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
            }
           }   
            stage('javadoc'){   
-                       when {
-                branch 'Develop'
+                    when {
+                 not {
+                                             expression{
+     (env.BRANCH_NAME.contains("PR-")) || (env.BRANCH_NAME=="Test-selenium") || (env.BRANCH_NAME=="Cron") ;
+                }
+                                               }
             }  
             
           steps{ 
@@ -143,13 +208,13 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
          }
           stage('selenium') {
                       when {
-                branch 'Develop'
+                branch 'Test-selenium'
             }  
              steps {
                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                       script {  
                            try { 
-              sh "echo nexus"  
+              sh "echo selenium"  
                                  } catch (Exception e) {
                 selenium="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
@@ -159,7 +224,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
           }
           stage('Deploy-to-Dev') {
                       when {
-                branch 'Develop'
+                 expression{
+                                    
+    (env.BRANCH_NAME == 'Develop') && (build=="true");
+              }               
             }  
              steps {
                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
@@ -220,7 +288,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     //error('Stopping early…')
                 }
                 try{
-            if( ("${USER_INPUT1}" == "Yes")&&(p2=="true")){
+            if( ("${USER_INPUT1}" == "Yes")&&(p2=="true") && (build=="true")){
                 sh"mvn -Pdev clean install"
                 
             }
@@ -239,34 +307,41 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             }
              }
                post { 
-        success {
+        always {
+            script{
+                if( (env.BRANCH_NAME == 'Develop') && (build=="true") && (deploy=="true")&&("${USER_INPUT1}" == "Yes")&&(p2=="true")){
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Developement environement  ${env.JOB_NAME} has been Updated- ", 
-                body: " Please verify if every thing is working fine! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: " Please verify if every thing is working fine! \n\nhttp://192.168.1.100/devlien \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+            }
         }
               }
            }
-         stage('Release to mirror-Prod') {
-              when {
-                branch 'master'
-            }  
+         stage("Release") {
+             when {
+              expression{
+                                    
+    ((env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true")) && (build=="true")|| ((env.BRANCH_NAME == 'master')&& ("${USER_INPUT}" == "Mirror") && (p1=="true")) &&(build=="true");
+              }                     
+                                }
              steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
             script {
-            // Define Variable
             timeout(time: 1, unit: 'MINUTES') {
-             USER_INPUT = input(
-                    message: 'Whats is the environment you would like to Release in ?',
+                
+             USER_INPUT3 = input(
+                    message: "Do you want to Release  to ${USER_INPUT}- ?",
                     parameters: [
                             [$class: 'ChoiceParameterDefinition',
-                             choices: ['Mirror','Prod'].join('\n'),
+                             choices: ['Yes','No'].join('\n'),
                              name: 'input',
                              description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
                     ])
-                
+                 if( "${USER_INPUT3}" == "Yes"){
               withCredentials([string(credentialsId: 'password', variable: 'password')]) {
                      
-                       userInput1 = input(id: 'userInput',
+                        userInput1 = input(id: 'userInput',
    message: 'Please type the password?',
    parameters: [[$class: 'PasswordParameterDefinition',
                          defaultValue: "",
@@ -293,20 +368,26 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 body: "Some-one has typed A Wrong secret password 3 Times successively for the ${USER_INPUT} environment for ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                  p1="false"
                            return 
-                          
-                    }  
-              }
+                    }
+             
                       
-                }
+                         }
+              }
+                
+                 }
             }
+                if( "${USER_INPUT3}" == "No"){
+                   //currentBuild.result = 'ABORTED'
+                   unstable('"\033[1;33m No was Selected! \033[0m"')
+                    return
+    //error('Stopping early…')
+                }
                 try{
-            if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") ){
+            if( ("${USER_INPUT}" == "Mirror") &&(p1=="true")&&(USER_INPUT3=="Yes") &&(build=="true")  ){
                 sh"mvn -Pmirror clean install"
             }
-                else if( ("${USER_INPUT}" == "Prod") && (p1=="true")){
-               sh"mvn -Pprod clean install"
-               sh "cd my-app && npm install"
-               sh "cd my-app && npm run build"
+                else if( ("${USER_INPUT}" == "Prod") &&(USER_INPUT3=="Yes")&& (p1=="true")&&(build=="true")){
+             
                sshagent(['firas-pem']) {
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo pkill -9 java;sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps/ROOT*"'
  sh 'scp -o StrictHostKeyChecking=no myproject/target/*.war root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps/ROOT.war'
@@ -334,19 +415,28 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             }
              }
               post { 
-        success {
+           always {
+            script{
+                if( ("${USER_INPUT}" == "Prod") &&(USER_INPUT3=="Yes")&& (p1=="true")&&(build=="true")&&(release=="true")&&(env.BRANCH_NAME == 'master')){
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "${USER_INPUT} environement  ${env.JOB_NAME} has been Updated- ", 
                 body: " Please verify if every thing is working fine! \n\n http://192.168.1.100/ \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-        }
+            }
+                if( ("${USER_INPUT}" == "Mirror") &&(p1=="true")&&(USER_INPUT3=="Yes") &&(build=="true")&&(release=="true")&&(env.BRANCH_NAME == 'master')  ){
+                    mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "${USER_INPUT} environement  ${env.JOB_NAME} has been Updated- ", 
+                body: " Please verify if every thing is working fine! \n\n http://192.168.1.100/mirrorlien \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                }
+            }
               }
            }
+         }
                 
              stage('nexus-upload') {
                             when {
                                 expression{
                                     
-    ((release=="true") && (env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true")) || ((release=="true") && (env.BRANCH_NAME == 'master') && (currentBuild.result == 'ABORTED'));
+    ((release=="true") && (env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true")) && (build=="true")|| ((release=="true") && (env.BRANCH_NAME == 'master') && (currentBuild.result == 'ABORTED') &&(build=="true"));
                                     
                                 }
             }  
@@ -408,7 +498,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     //error('Stopping early…')
                 }
                 try{
-            if( ("${USER_INPUT2}" == "Yes")&&(p3=="true")){
+            if( ("${USER_INPUT2}" == "Yes")&&(p3=="true") &&(build=="true")){
                 sh"mvn -Pprod deploy"
             }
                     else{
@@ -426,10 +516,14 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             }
              }
                   post { 
-        success {
+        always {
+            script{
+                if( ("${USER_INPUT2}" == "Yes")&&(p3=="true") &&(build=="true")&&(upload=="true")&&(env.BRANCH_NAME == 'master')){
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Nexus backup  ${env.JOB_NAME} has been Updated- ", 
-                body: " Did you stored a snapshot backup for the oldest version! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: " You can check your nexus repository at : \n\nhttp://192.168.1.45:8081/ \n\nor at: \n\nhttps://nexus.hrdatabank.com/ \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+            }
         }
               }
            }
@@ -447,8 +541,5 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                  
                 }
           }
-         
+         }
 }    
-   
-
-}
