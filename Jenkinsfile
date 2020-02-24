@@ -307,10 +307,14 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             }
              }
                post { 
-        success {
+        always {
+            script{
+                if( (env.BRANCH_NAME == 'Develop') && (build=="true") && (deploy=="true")&&("${USER_INPUT1}" == "Yes")&&(p2=="true")){
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Developement environement  ${env.JOB_NAME} has been Updated- ", 
                 body: " Please verify if every thing is working fine! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+            }
         }
               }
            }
@@ -411,13 +415,22 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             }
              }
               post { 
-        success {
+           always {
+            script{
+                if( ("${USER_INPUT}" == "Prod") &&(USER_INPUT3=="Yes")&& (p1=="true")&&(build=="true")&&(release=="true")&&(env.BRANCH_NAME == 'master')){
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "${USER_INPUT} environement  ${env.JOB_NAME} has been Updated- ", 
                 body: " Please verify if every thing is working fine! \n\n http://192.168.1.100/ \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-        }
+            }
+                if( ("${USER_INPUT}" == "Mirror") &&(p1=="true")&&(USER_INPUT3=="Yes") &&(build=="true")&&(release=="true")&&(env.BRANCH_NAME == 'master')  ){
+                    mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "${USER_INPUT} environement  ${env.JOB_NAME} has been Updated- ", 
+                body: " Please verify if every thing is working fine! \n\n http://192.168.1.100/mirrorlien \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                }
+            }
               }
            }
+         }
                 
              stage('nexus-upload') {
                             when {
@@ -505,7 +518,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                   post { 
         always {
             script{
-                if( ("${USER_INPUT2}" == "Yes")&&(p3=="true") &&(build=="true")&&(upload=="true")){
+                if( ("${USER_INPUT2}" == "Yes")&&(p3=="true") &&(build=="true")&&(upload=="true")&&(env.BRANCH_NAME == 'master')){
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Nexus backup  ${env.JOB_NAME} has been Updated- ", 
                 body: " Did you stored a snapshot backup for the oldest version! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
