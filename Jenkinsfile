@@ -28,132 +28,16 @@ pipeline {
         jdk 'jdk'
         nodejs 'node' 
     }
-
+/**parameters {
+        choice(
+            choices: ['greeting' , 'silence'],
+            description: '',
+            name: 'REQUESTED_ACTION')
+    }*/
      stages {  
-              stage('build') {
-                     when {
-                branch 'Develop'
-            }  
-                   steps {
-                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                      script {  
-                           try { 
-      
-              sh "mvn install -DskipTests" 
-              sh "cd my-app && npm install"
-              sh "cd my-app && npm run build"   
-                  } catch (Exception e) {
-                build="false"
-//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
-               sh "exit 1"}                              }
-                      }
-        }
-                 
-    } 
-            stage('test') {
-                        when {
-                branch 'Develop'
-            }  
-             steps {
-                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                      script {  
-                           try { 
-                 sh"mvn test"
-              //sh "mvn -pl !dashboardSelenium test"  
-                } catch (Exception e) {
-                test="false"
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
-               sh "exit 1"}                              }
-                 }
-        }
-    } 
-       stage('sonar') {
-
-             steps {
-                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              script{
-                  try { 
-                  if (env.BRANCH_NAME.startsWith('PR-'))
-                  {
-                       sh " mvn verify sonar:sonar \
-                    -Dsonar.projectKey=lilfrou_selenium \
-                    -Dsonar.organization=lilfrou-github \
-                    -Dsonar.host.url=https://sonarcloud.io \
-                    -Dsonar.login=b9424f7d0ef3247f0ba6bec3d93d2be3382fb019 \
-                    -Dsonar.pullrequest.base='${CHANGE_TARGET}' \
-                    -Dsonar.pullrequest.branch='${env.BRANCH_NAME}' \
-                    -Dsonar.pullrequest.key='${env.CHANGE_ID}' \
-                    -Dsonar.pullrequest.provider=GitHub \
-                    -Dsonar.pullrequest.github.repository=lilfrou/selenium"
-                  }
-                        else if((env.BRANCH_NAME=="Deploy")||(env.BRANCH_NAME=="Test-selenium"))
-                  {
-                      echo 'no analyse allowed'
-                  } 
-                 else {
-             sh " mvn verify sonar:sonar \
-                    -Dsonar.projectKey=lilfrou_selenium \
-                    -Dsonar.organization=lilfrou-github \
-                    -Dsonar.host.url=https://sonarcloud.io \
-                    -Dsonar.branch.name='${env.BRANCH_NAME}' \
-                    -Dsonar.login=b9424f7d0ef3247f0ba6bec3d93d2be3382fb019"
-                  }
-                  
-                       } catch (Exception e) {
-                analyse="false"
-   slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")                    
-               sh "exit 1"}
-                  }
-             }
-           }
-          }   
-           stage('javadoc'){   
-                       when {
-                branch 'Develop'
-            }  
-            
-          steps{ 
-               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                      script {  
-                           try { 
-                    sh"mvn javadoc:aggregate"   
-                    publishHTML (target: [
-                                allowMissing: false,
-                                alwaysLinkToLastBuild: false,
-                                keepAll: true,
-                                reportDir: 'target/site/apidocs',
-
-                                reportFiles: 'index.html',
-                                reportName: "javadoc"
-                                           ])
-                                } catch (Exception e) {
-                javadoc="false"
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
-               sh "exit 1"}                              }
-                 }
-       
-           }
-         }
-          stage('selenium') {
-                      when {
-                branch 'Develop'
-            }  
-             steps {
-                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                      script {  
-                           try { 
-              sh "echo nexus"  
-                                 } catch (Exception e) {
-                selenium="false"
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
-               sh "exit 1"}                              }
-                 }
-        }
-          }
-         stage('Deploy to dev-mirror') {
-              when {
-                branch 'Deploy'
+         stage("Verify Mirror-ProD"){
+             when {
+                branch 'master'
             }  
              steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
@@ -161,10 +45,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             // Define Variable
             timeout(time: 1, unit: 'MINUTES') {
              USER_INPUT = input(
-                    message: 'Whats is the environment you would like to deploy in ?',
+                    message: 'Whats is the environment you would like to Release in ?',
                     parameters: [
                             [$class: 'ChoiceParameterDefinition',
-                             choices: ['Dev','Mirror'].join('\n'),
+                             choices: ['Mirror','Prod'].join('\n'),
                              name: 'input',
                              description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
                     ])
@@ -195,7 +79,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                     
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison ${env.STAGE_NAME} Stage", 
-                body: "Some-one has typed A Wrong secrect password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: "Some-one has typed A Wrong secret password 3 Times successively for the ${USER_INPUT} environment for ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                  p1="false"
                            return 
                           
@@ -204,40 +88,163 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                       
                 }
             }
-                try{
-            if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") ){
-                sh"mvn -Pmirror clean install"
             }
-                else if( ("${USER_INPUT}" == "Dev") && (p1=="true")){
-                sh"mvn -Pdev clean install"
-                }
-                else {
-                sh"echo no deploy"
-                }
-                     } catch (Exception e) {
-                deploy="false"
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
-                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Deploying to ${USER_INPUT} environement ${env.JOB_NAME} - Failed", 
-                body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-               sh "exit 1"}    
-            }
-            }
-             }
-              post { 
-        success {
-            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "${USER_INPUT} environement  ${env.JOB_NAME} has been Updated- ", 
-                body: " Please verify if every thing is working fine! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-        }
               }
-           }
-           
+             }
+         }
+         
+        
+              stage('build') {
+                                          when {
+                expression{
+                    (!env.BRANCH_NAME.contains("PR-")) || (!env.BRANCH_NAME=="Test-selenium") || (!env.BRANCH_NAME=="Cron") ;
+                }
+            }  
+          
+                   steps {
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      script {  
+                           try { 
+      
+                 if((env.BRANCH_NAME=="master") && ("${USER_INPUT}" == "Mirror") &&(p1=="true") )
+                               {
+                                  sh "mvn -Pmirror clean install -DskipTests" 
+              sh "cd my-app && npm install"
+                                   sh "cd my-app && npm run build"  
+                               }
+                               else if((env.BRANCH_NAME=="master") && ("${USER_INPUT}" == "Prod") &&(p1=="true"))
+                               {
+                                   sh "mvn -Pprod clean install -DskipTests" 
+              sh "cd my-app && npm install"
+                                   sh "cd my-app && npm run build"  
+                               }
+                               else
+                               {
+              sh "mvn -Pdev clean install -DskipTests" 
+              sh "cd my-app && npm install"
+                                   sh "cd my-app && npm run build" }
+                  } catch (Exception e) {
+                build="false"
+//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}                              }
+                      }
+        }
+                 
+    } 
+            stage('test') {
+                        when {
+                 expression{
+                     (!env.BRANCH_NAME.contains("PR-")) || (!env.BRANCH_NAME=="Test-selenium") || (!env.BRANCH_NAME=="Cron") ;
+                }
+            }  
+             steps {
+                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      script {  
+                           try { 
+                 sh"mvn test"
+              //sh "mvn -pl !dashboardSelenium test"  
+                } catch (Exception e) {
+                test="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}                              }
+                 }
+        }
+    } 
+       stage('sonar') {
+              when {
+                  not {
+          anyOf {
+            branch 'Test-selenium';
+            branch 'Cron'
+          }
+       }
                 
-             
-          stage('Release-to-ProD') {
+            }  
+
+             steps {
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              script{
+                  try { 
+                  if (env.BRANCH_NAME.startsWith('PR-'))
+                  {
+                       sh " mvn verify sonar:sonar \
+                    -Dsonar.projectKey=lilfrou_selenium \
+                    -Dsonar.organization=lilfrou-github \
+                    -Dsonar.host.url=https://sonarcloud.io \
+                    -Dsonar.login=b9424f7d0ef3247f0ba6bec3d93d2be3382fb019 \
+                    -Dsonar.pullrequest.base='${CHANGE_TARGET}' \
+                    -Dsonar.pullrequest.branch='${env.BRANCH_NAME}' \
+                    -Dsonar.pullrequest.key='${env.CHANGE_ID}' \
+                    -Dsonar.pullrequest.provider=GitHub \
+                    -Dsonar.pullrequest.github.repository=lilfrou/selenium"
+                  }
+                        
+                 else {
+             sh " mvn verify sonar:sonar \
+                    -Dsonar.projectKey=lilfrou_selenium \
+                    -Dsonar.organization=lilfrou-github \
+                    -Dsonar.host.url=https://sonarcloud.io \
+                    -Dsonar.branch.name='${env.BRANCH_NAME}' \
+                    -Dsonar.login=b9424f7d0ef3247f0ba6bec3d93d2be3382fb019"
+                  }
+                  
+                       } catch (Exception e) {
+                analyse="false"
+   slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")                    
+               sh "exit 1"}
+                  }
+             }
+           }
+          }   
+           stage('javadoc'){   
+                    when {
+                 expression{
+     (!env.BRANCH_NAME.contains("PR-")) || (!env.BRANCH_NAME=="Test-selenium") || (!env.BRANCH_NAME=="Cron") ;
+                }
+            }  
+            
+          steps{ 
+               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      script {  
+                           try { 
+                    sh"mvn javadoc:aggregate"   
+                    publishHTML (target: [
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: 'target/site/apidocs',
+
+                                reportFiles: 'index.html',
+                                reportName: "javadoc"
+                                           ])
+                                } catch (Exception e) {
+                javadoc="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}                              }
+                 }
+       
+           }
+         }
+          stage('selenium') {
                       when {
-                branch 'master'
+                branch 'Test-selenium'
+            }  
+             steps {
+                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                      script {  
+                           try { 
+              sh "echo selenium"  
+                                 } catch (Exception e) {
+                selenium="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}                              }
+                 }
+        }
+          }
+          stage('Deploy-to-Dev') {
+                      when {
+                branch 'Develop'
             }  
              steps {
                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
@@ -246,7 +253,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             timeout(time: 1, unit: 'MINUTES') {
                 
              USER_INPUT1 = input(
-                    message: 'Are you sure you want to Release to the PROD environment?',
+                    message: 'Are you sure you want to Deploy to the Dev environment?',
                     parameters: [
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Yes','No'].join('\n'),
@@ -279,7 +286,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                  mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison ${env.STAGE_NAME} Stage", 
-                body: "Some-one has typed A Wrong secrect password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: "Some-one has typed A Wrong secret password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                        p2="false"
                            return
                     }
@@ -298,14 +305,18 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     //error('Stopping early…')
                 }
                 try{
-            if( ("${USER_INPUT1}" == "Yes")&&(p2=="true")){
-                sh"mvn -Pprod clean install"
+            if( ("${USER_INPUT1}" == "Yes")&&(p2=="true") && (build=="true")){
+                sh"mvn -Pdev clean install"
+                
             }
+                    else{
+                        sh"echo NO Deploy"
+                    }
                      } catch (Exception e) {
-                release="false"
+                deploy="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Deploying to Production environement ${env.JOB_NAME} - Failed", 
+                subject: "Deploying to Developement environement ${env.JOB_NAME} - Failed", 
                 body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                sh "exit 1"}    
               
@@ -315,15 +326,67 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                post { 
         success {
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Production environement  ${env.JOB_NAME} has been Updated- ", 
+                subject: "Developement environement  ${env.JOB_NAME} has been Updated- ", 
                 body: " Please verify if every thing is working fine! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
         }
               }
            }
+         stage("Release") {
+              when {
+                branch 'master'
+            }  
+             steps {
+              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
+            script {
            
+                try{
+            if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") &&(build=="true")  ){
+                sh"mvn -Pmirror clean install"
+            }
+                else if( ("${USER_INPUT}" == "Prod") && (p1=="true")&&(build=="true")){
+             
+               sshagent(['firas-pem']) {
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo pkill -9 java;sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps/ROOT*"'
+ sh 'scp -o StrictHostKeyChecking=no myproject/target/*.war root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps/ROOT.war'
+ sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps/*.war"'
+
+}
+                      sshagent(['firas-pem']) {
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps2/ROOT*"'
+ sh 'scp -r -o StrictHostKeyChecking=no my-app/dist/my-app root@192.168.1.100:/opt/apache-tomcat-8.5.45/webapps2/ROOT'
+ sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps2/*ROOT; sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
+
+}
+                }
+                else {
+                sh"echo no Release"
+                }
+                     } catch (Exception e) {
+                release="false"
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Releasing to ${USER_INPUT} environement ${env.JOB_NAME} - Failed", 
+                body: "This is an Urgent Problem ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+               sh "exit 1"}    
+            }
+            }
+             }
+              post { 
+        success {
+            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "${USER_INPUT} environement  ${env.JOB_NAME} has been Updated- ", 
+                body: " Please verify if every thing is working fine! \n\n http://192.168.1.100/ \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+              }
+           }
+                
              stage('nexus-upload') {
                             when {
-                branch 'master'
+                                expression{
+                                    
+    ((release=="true") && (env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true")) && (build=="true")|| ((release=="true") && (env.BRANCH_NAME == 'master') && (currentBuild.result == 'ABORTED') &&(build=="true"));
+                                    
+                                }
             }  
              steps {
       catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
@@ -365,7 +428,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
                  mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Security Raison ${env.STAGE_NAME} Stage", 
-                body: "Some-one has typed A Wrong secrect password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: "Some-one has typed A Wrong secret password 3 Times successively for the ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                         p3="false"
                            return
                     }
@@ -383,9 +446,12 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     //error('Stopping early…')
                 }
                 try{
-            if( ("${USER_INPUT2}" == "Yes")&&(p3=="true")){
-                sh"mvn -Pprod clean install"
+            if( ("${USER_INPUT2}" == "Yes")&&(p3=="true") &&(build=="true")){
+                sh"mvn -Pprod deploy"
             }
+                    else{
+                        sh"no nexus Uploading"
+                    }
                      } catch (Exception e) {
                 upload="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
@@ -419,8 +485,5 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                  
                 }
           }
-         
+         }
 }    
-   
-
-}
