@@ -360,7 +360,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                sh "exit 1"}    
             }
             }
-             
+             }
               post { 
         success {
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
