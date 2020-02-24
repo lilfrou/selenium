@@ -521,7 +521,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 if( ("${USER_INPUT2}" == "Yes")&&(p3=="true") &&(build=="true")&&(upload=="true")&&(env.BRANCH_NAME == 'master')){
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Nexus backup  ${env.JOB_NAME} has been Updated- ", 
-                body: " Did you stored a snapshot backup for the oldest version! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: " You can check your nexus repository at : \n\nhttp://192.168.1.45:8081/ \n\nor at: \n\nhttps://nexus.hrdatabank.com/ \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
         }
             }
         }
