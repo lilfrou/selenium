@@ -98,7 +98,7 @@ pipeline {
                                           when {
                                                not {
                                              expression{
-    ( (env.BRANCH_NAME.contains("PR-")) || (env.BRANCH_NAME=="Test-selenium") || (env.BRANCH_NAME=="Cron") || ((env.BRANCH_NAME=="master")&&("${USER_INPUT}" == "Mirror") &&(p1=="true"))|| ((env.BRANCH_NAME=="master")&&("${USER_INPUT}" == "Prod") &&(p1=="true")) )  ;
+     (env.BRANCH_NAME.contains("PR-")) || (env.BRANCH_NAME=="Test-selenium") || (env.BRANCH_NAME=="Cron") ;
                 }
                                                }
             }  
@@ -120,11 +120,14 @@ pipeline {
               sh "cd my-app && npm install"
                                    sh "cd my-app && npm run build"  
                                }
-                               else
+                               else if (env.BRANCH_NAME=="Develop")
                                {
               sh "mvn -Pdev clean install -DskipTests" 
               sh "cd my-app && npm install"
                                    sh "cd my-app && npm run build" }
+                               else {
+                                   unstable('"\033[1;33m No build allowed ! \033[0m"')
+                               }
                   } catch (Exception e) {
                 build="false"
 //slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
