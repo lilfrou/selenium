@@ -327,7 +327,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
         }
               }
            }
-         stage("Release to ${USER_INPUT}") {
+         stage("Release to ""${USER_INPUT}") {
               when {
                 branch 'master'
             }  
