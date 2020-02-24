@@ -327,7 +327,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             timeout(time: 1, unit: 'MINUTES') {
                 
              USER_INPUT3 = input(
-                    message: 'Do you want to Release  to mirro- ?',
+                    message: 'Do you want to Release  to "${USER_INPUT}"- ?',
                     parameters: [
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Yes','No'].join('\n'),
@@ -372,7 +372,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 
                  }
             }
-                if( "${USER_INPUT2}" == "No"){
+                if( "${USER_INPUT3}" == "No"){
                    //currentBuild.result = 'ABORTED'
                    unstable('"\033[1;33m No was Selected! \033[0m"')
                     return
