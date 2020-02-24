@@ -96,13 +96,9 @@ pipeline {
         
               stage('build') {
                                           when {
-                                              not {
-          anyOf {
-            branch 'PR-/*';
-            branch 'Test-selenium';
-            branch 'Cron'  
-          }
-       }
+                                             expression{
+     (!env.BRANCH_NAME.contains("PR-")) || (env.BRANCH_NAME!="Test-selenium") || (!env.BRANCH_NAME!="Cron") ;
+                }
                
             }  
           
@@ -337,9 +333,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
               }
            }
          stage("Release") {
-              when {
-                branch 'master'
-            }  
+              expression{
+                                    
+    ((env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true")) && (build=="true")|| ((env.BRANCH_NAME == 'master')&& ("${USER_INPUT}" == "Mirror") && (p1=="true")) &&(build=="true"));
+                                    
+                                }
              steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
             script {
