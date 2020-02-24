@@ -1,3 +1,4 @@
+def USER_INPUT3=""
 def USER_INPUT=""
 def userInput1=""
 def USER_INPUT1=""
@@ -55,33 +56,7 @@ pipeline {
                 
               withCredentials([string(credentialsId: 'password', variable: 'password')]) {
                      
-                       userInput1 = input(id: 'userInput',
-   message: 'Please type the password?',
-   parameters: [[$class: 'PasswordParameterDefinition',
-                         defaultValue: "",
-                         name: 'Reminder - the Stage will abort itself in less then  1 Minute',
-                 description: "You Have '${j}' Trys Left"]])
-               
-                 
-                   while("${userInput1}" != "${password}") { 
-                     j--;
-                    
-                       userInput1 = input(id: 'userInput',
-   message: 'Please type the password?',
-   parameters: [[$class: 'PasswordParameterDefinition',
-                         defaultValue: "",
-                         name: "Reminder - the Stage will abort itself soon",
-                description: "Wrong Password! \nYou Have '${j}' Trys Left"]])
-                    i++;
-                       if(i==3 && ("${userInput1}" != "${password}")){
-          
-                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
-                    
-                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Security Raison ${env.STAGE_NAME} Stage", 
-                body: "Some-one has typed A Wrong secret password 3 Times successively for the ${USER_INPUT} environment for ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-                 p1="false"
-                           return 
+                      
                           
                     }  
               }
@@ -90,8 +65,7 @@ pipeline {
             }
             }
               }
-             }
-         }
+        
          
         
               stage('build') {
@@ -354,7 +328,54 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
              steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {         
             script {
-           
+            timeout(time: 1, unit: 'MINUTES') {
+                
+             USER_INPUT3 = input(
+                    message: 'Do you want to Release  to mirro- ?',
+                    parameters: [
+                            [$class: 'ChoiceParameterDefinition',
+                             choices: ['Yes','No'].join('\n'),
+                             name: 'input',
+                             description: 'Chose Wise - the Stage will abort itself in 1 Minute ']
+                    ])
+                 if( "${USER_INPUT3}" == "Yes"){
+              withCredentials([string(credentialsId: 'password', variable: 'password')]) {
+                     
+                        userInput1 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: 'Reminder - the Stage will abort itself in less then  1 Minute',
+                 description: "You Have '${j}' Trys Left"]])
+               
+                 
+                   while("${userInput1}" != "${password}") { 
+                     j--;
+                    
+                       userInput1 = input(id: 'userInput',
+   message: 'Please type the password?',
+   parameters: [[$class: 'PasswordParameterDefinition',
+                         defaultValue: "",
+                         name: "Reminder - the Stage will abort itself soon",
+                description: "Wrong Password! \nYou Have '${j}' Trys Left"]])
+                    i++;
+                       if(i==3 && ("${userInput1}" != "${password}")){
+          
+                      unstable('"\033[1;33m Sending email to admin ! \033[0m"')
+                    
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Security Raison ${env.STAGE_NAME} Stage", 
+                body: "Some-one has typed A Wrong secret password 3 Times successively for the ${USER_INPUT} environment for ${env.JOB_NAME} Pipline!\n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                 p1="false"
+                           return 
+                    }
+             
+                      
+                         }
+              }
+                
+                 }
+            }
                 try{
             if( ("${USER_INPUT}" == "Mirror") &&(p1=="true") &&(build=="true")  ){
                 sh"mvn -Pmirror clean install"
