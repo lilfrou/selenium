@@ -96,9 +96,14 @@ pipeline {
         
               stage('build') {
                                           when {
-                expression{
-                    (!env.BRANCH_NAME.contains("PR-")) || (!env.BRANCH_NAME=="Test-selenium") || (!env.BRANCH_NAME=="Cron") ;
-                }
+                                              not {
+          anyOf {
+            branch 'PR-/*';
+            branch 'Test-selenium';
+            branch 'Cron'  
+          }
+       }
+               
             }  
           
                    steps {
