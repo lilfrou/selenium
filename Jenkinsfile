@@ -327,7 +327,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             timeout(time: 1, unit: 'MINUTES') {
                 
              USER_INPUT3 = input(
-                    message: 'Do you want to Release  to "${USER_INPUT}"- ?',
+                    message: "Do you want to Release  to ${USER_INPUT}- ?",
                     parameters: [
                             [$class: 'ChoiceParameterDefinition',
                              choices: ['Yes','No'].join('\n'),
@@ -503,10 +503,14 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             }
              }
                   post { 
-        success {
+        always {
+            script{
+                if( ("${USER_INPUT2}" == "Yes")&&(p3=="true") &&(build=="true")&&(upload=="true")){
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Nexus backup  ${env.JOB_NAME} has been Updated- ", 
                 body: " Did you stored a snapshot backup for the oldest version! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+            }
         }
               }
            }
