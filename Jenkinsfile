@@ -97,7 +97,7 @@ pipeline {
               stage('build') {
                                           when {
                 expression{
-                    !env.BRANCH_NAME.contains("PR-")
+                    (!env.BRANCH_NAME.contains("PR-")) || (!env.BRANCH_NAME=="Test-selenium") || (!env.BRANCH_NAME=="Cron") ;
                 }
             }  
           
@@ -105,12 +105,8 @@ pipeline {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                       script {  
                            try { 
-      if (env.BRANCH_NAME=="Develop")
-                               {
-              sh "mvn -Pdev clean install -DskipTests" 
-              sh "cd my-app && npm install"
-                                   sh "cd my-app && npm run build" }
-                               else if((env.BRANCH_NAME=="master") && ("${USER_INPUT}" == "Mirror") &&(p1=="true") )
+      
+                 if((env.BRANCH_NAME=="master") && ("${USER_INPUT}" == "Mirror") &&(p1=="true") )
                                {
                                   sh "mvn -Pmirror clean install -DskipTests" 
               sh "cd my-app && npm install"
@@ -122,9 +118,11 @@ pipeline {
               sh "cd my-app && npm install"
                                    sh "cd my-app && npm run build"  
                                }
-                               else{
-                                   sh"echo no build allowed"
-                               }
+                               else
+                               {
+              sh "mvn -Pdev clean install -DskipTests" 
+              sh "cd my-app && npm install"
+                                   sh "cd my-app && npm run build" }
                   } catch (Exception e) {
                 build="false"
 //slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
@@ -136,7 +134,9 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     } 
             stage('test') {
                         when {
-                branch 'Develop'
+                 expression{
+                     (!env.BRANCH_NAME.contains("PR-")) || (!env.BRANCH_NAME=="Test-selenium") || (!env.BRANCH_NAME=="Cron") ;
+                }
             }  
              steps {
                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -152,6 +152,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
         }
     } 
        stage('sonar') {
+              when {
+                 expression{
+        ((!env.BRANCH_NAME=="Test-selenium") || (!env.BRANCH_NAME=="Cron") ;
+                }
+            }  
 
              steps {
                   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -170,10 +175,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                     -Dsonar.pullrequest.provider=GitHub \
                     -Dsonar.pullrequest.github.repository=lilfrou/selenium"
                   }
-                        else if((env.BRANCH_NAME=="Deploy")||(env.BRANCH_NAME=="Test-selenium"))
-                  {
-                      echo 'no analyse allowed'
-                  } 
+                        
                  else {
              sh " mvn verify sonar:sonar \
                     -Dsonar.projectKey=lilfrou_selenium \
@@ -192,8 +194,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
            }
           }   
            stage('javadoc'){   
-                       when {
-                branch 'Develop'
+                    when {
+                 expression{
+     (!env.BRANCH_NAME.contains("PR-")) || (!env.BRANCH_NAME=="Test-selenium") || (!env.BRANCH_NAME=="Cron") ;
+                }
             }  
             
           steps{ 
@@ -220,13 +224,13 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
          }
           stage('selenium') {
                       when {
-                branch 'Develop'
+                branch 'Test-selenium'
             }  
              steps {
                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                       script {  
                            try { 
-              sh "echo nexus"  
+              sh "echo selenium"  
                                  } catch (Exception e) {
                 selenium="false"
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
@@ -297,7 +301,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     //error('Stopping early…')
                 }
                 try{
-            if( ("${USER_INPUT1}" == "Yes")&&(p2=="true")){
+            if( ("${USER_INPUT1}" == "Yes")&&(p2=="true") && (build=="true")){
                 sh"mvn -Pdev clean install"
                 
             }
@@ -323,7 +327,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
         }
               }
            }
-         stage('Release to mirror-Prod') {
+         stage('Release to "${USER_INPUT}"') {
               when {
                 branch 'master'
             }  
@@ -376,7 +380,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                             when {
                                 expression{
                                     
-    ((release=="true") && (env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true")) || ((release=="true") && (env.BRANCH_NAME == 'master') && (currentBuild.result == 'ABORTED'));
+    ((release=="true") && (env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true")) && (build=="true")|| ((release=="true") && (env.BRANCH_NAME == 'master') && (currentBuild.result == 'ABORTED') &&(build=="true"));
                                     
                                 }
             }  
@@ -438,7 +442,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     //error('Stopping early…')
                 }
                 try{
-            if( ("${USER_INPUT2}" == "Yes")&&(p3=="true")){
+            if( ("${USER_INPUT2}" == "Yes")&&(p3=="true") &&(build=="true")){
                 sh"mvn -Pprod deploy"
             }
                     else{
@@ -479,5 +483,3 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
           }
          }
 }    
-   
-
