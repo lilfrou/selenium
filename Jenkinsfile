@@ -30,7 +30,7 @@ pipeline {
         }
                        stage("Main") {
                      agent any
-                    parallel {
+                    stages {
          stage("Verify Mirror-ProD"){
              steps{
                  sh"echo hi"
