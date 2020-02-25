@@ -2,6 +2,24 @@ pipeline {
      agent any
 
     stages {
+            stage('Run Tests') {
+            parallel {
+                stage('Test On Windows') {
+                  
+                    steps {
+                       sh "echo windows"
+                    }
+                   
+                }
+                stage('Test On Linux') {
+                   
+                    steps {
+                      sh "echo windows"
+                    }
+                    
+                }
+            }
+        }
         stage("build and deploy on Windows and Linux") {
             parallel {
                 stage("windows") {
@@ -48,24 +66,7 @@ pipeline {
                     }
                      
                 }
-                 stage('Run Tests') {
-            parallel {
-                stage('Test On Windows') {
-                  
-                    steps {
-                       sh "echo windows"
-                    }
-                   
-                }
-                stage('Test On Linux') {
-                   
-                    steps {
-                      sh "echo windows"
-                    }
-                    
-                }
-            }
-        }
+              
             }
         }
     }
