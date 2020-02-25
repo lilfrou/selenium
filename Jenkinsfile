@@ -36,6 +36,26 @@ pipeline {
             name: 'REQUESTED_ACTION')
     }*/
      stages {  
+         stage("build and deploy on Windows and Linux") {
+            parallel {
+                stage("windows") {
+                     agent any
+                    stages {
+          stage('Cron'){
+         when {
+                branch 'Cron'
+            }  
+         
+             steps{
+                 sh"chmod +x hello.sh"
+                 sh "./hello.sh"
+             }
+         }
+                    }
+                }
+                 stage("linux") {
+                     agent any
+                    stages {
          stage("Verify Mirror-ProD"){
              when {
                 branch 'master'
@@ -544,3 +564,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
           }
          }
 }    
+            }
+         }
+     }
+}
