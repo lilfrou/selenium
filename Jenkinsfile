@@ -26,6 +26,16 @@ pipeline {
                     }
                 }
             }
+                    stage("Main") {
+                     agent any
+                    stages {
+         stage("Verify Mirror-ProD"){
+             steps{
+                 sh"echo hi"
+             }
+         }
+                    }
+                    }
         }
     }
 }
