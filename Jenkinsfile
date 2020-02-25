@@ -1,6 +1,20 @@
 pipeline {
     agent none
     stages {
+        stage("Cron || Normal") {
+            parallel {
+                stage("Crons") {
+                     agent any
+                    stages {
+          stage('Cron'){
+               steps{
+                 sh"echo hello"
+                 
+             }
+         }
+                    }
+                }
+            }
         stage('Parallel Stage') {
             parallel {
                 stage('Stage 1') {
