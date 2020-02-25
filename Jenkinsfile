@@ -550,8 +550,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
               }
            }
            
-    
-         stage('Clean'){     
+         }
+}    
+            }
+         }
+          stage('Clean'){     
           steps{  
                 script{
                 cleanWs()
@@ -563,9 +566,5 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                  
                 }
           }
-         }
-}    
-            }
-         }
      }
 }
