@@ -14,7 +14,7 @@ pipeline {
          }
                     }
                 }
-            }
+            
         
          stage("Crons"1) {
                      agent any
@@ -36,6 +36,7 @@ pipeline {
                                 },
                                 "Stage 2.2.": {
                                     echo "Stage 2.2."
+                                }
                                 }
                                 }
                                 }
