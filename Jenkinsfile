@@ -23,7 +23,7 @@ pipeline {
  parallel {
                 stage("windows2") {
                      agent any
-                    stages {
+                    
                         stage("build2") {
                             steps {
                                 sh"echo 1"
@@ -37,7 +37,6 @@ pipeline {
                         }
                     }
                 }
- }
  }
                 }
                 stage("linux") {
