@@ -48,8 +48,18 @@ pipeline {
             }  
          
              steps{
-                 sh"chmod +x hello.sh"
-                 sh "./hello.sh"
+                 script{
+                      parallel (
+                                "hello.sh": {
+                                   sh"chmod +x hello.sh"
+                                   sh "./hello.sh"
+                                },
+                                "info.sh": {
+                                    sh"chmod +x info.sh"
+                                   sh "./info.sh"
+                                }
+                          }
+                 }
              }
          }
                     }
