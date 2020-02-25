@@ -39,6 +39,7 @@ pipeline {
                 }
  }
  }
+                }
                 stage("linux") {
                      agent any
                     stages {
