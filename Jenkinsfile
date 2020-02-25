@@ -46,13 +46,20 @@ pipeline {
                             }
                         }
                     }
-                     stage("build45") {
-                            steps {
-                                sh"echo 1"
-                            }
-                        }
+                     
                 }
-                  
+                  stage("build45") {
+                          steps {
+        parallel (
+            "firstTask" : {
+                sh"echo 2"
+            },
+            "secondTask" : {
+              sh"echo 2"
+            }
+        )
+    }
+}
             }
         }
     }
