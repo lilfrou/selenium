@@ -90,7 +90,7 @@ pipeline {
               sh "cd my-app && npm install"
                                    sh "cd my-app && npm run build"  
                                }
-                               else if (env.BRANCH_NAME=="Develop")
+                               else if (env.BRANCH_NAME!="master")
                                {
               sh "mvn -Pdev clean install -DskipTests" 
               sh "cd my-app && npm install"
