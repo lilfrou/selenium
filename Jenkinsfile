@@ -4,6 +4,9 @@ pipeline {
         stage('Parallel Stage') {
             parallel {
                 stage('Stage 1') {
+                    agent any
+                     stages {
+                           stage('Cron'){
                     steps {
                         echo "Stage 1"
                     }
@@ -24,5 +27,7 @@ pipeline {
                 }
             }
         }
+    }
+}
     }
 }
