@@ -36,6 +36,21 @@ pipeline {
                  sh"echo hi"
              }
          }
+                         stage("Verify Mirror-ProD1"){
+             steps{
+                 sh"echo hi"
+             }
+         }
+                         stage("Verify Mirror-ProD2"){
+             steps{
+                 sh"echo hi"
+             }
+         }
+                         stage("Verify Mirror-ProD3"){
+             steps{
+                 sh"echo hi"
+             }
+         }
                     }
                     }
     }
