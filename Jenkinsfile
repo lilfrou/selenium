@@ -48,18 +48,24 @@ pipeline {
                     }
                      
                 }
-                  stage("build45") {
-                          steps {
-        parallel (
-            "firstTask" : {
-                sh"echo 2"
-            },
-            "secondTask" : {
-              sh"echo 2"
+                 stage('Run Tests') {
+            parallel {
+                stage('Test On Windows') {
+                  
+                    steps {
+                       sh "echo windows"
+                    }
+                   
+                }
+                stage('Test On Linux') {
+                   
+                    steps {
+                      sh "echo windows"
+                    }
+                    
+                }
             }
-        )
-    }
-}
+        }
             }
         }
     }
