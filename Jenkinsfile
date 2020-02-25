@@ -19,25 +19,6 @@ pipeline {
                             }
                         }
                     }
- stage("build and deploy on Windows and Linux21") {               
- parallel {
-                stage("windows2") {
-                     agent any
-                    
-                        stage("build2") {
-                            steps {
-                                sh"echo 1"
-                            }
-                        }
-                        stage("deploy2") {
-                           
-                            steps {
-                                sh"echo 1"
-                            }
-                        }
-                    }
-                }
- }
                 }
                 stage("linux") {
                      agent any
