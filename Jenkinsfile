@@ -38,7 +38,7 @@ pipeline {
      stages {  
          stage("Cron || Normal") {
             parallel {
-                stage("Windows") {
+                stage("Crons") {
                      agent any
                     stages {
           stage('Cron'){
@@ -53,7 +53,7 @@ pipeline {
          }
                     }
                 }
-                 stage("lunix") {
+                 stage("Main") {
                      agent any
                     stages {
          stage("Verify Mirror-ProD"){
