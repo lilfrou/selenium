@@ -1,75 +1,44 @@
-pipeline {
-     agent any
+def test = [:]
 
-    stages {
-           
-        stage("build and deploy on Windows and Linux") {
-            parallel {
-                stage("windows") {
-                     agent any
-                    stages {
-                        stage("build") {
-                            steps {
-                                sh"echo 1"
-                            }
-                        }
-                        stage("deploy") {
-                           
-                            steps {
-                                sh"echo 1"
-                            }
-                        }
-                    }
-                }
-                stage("linux") {
-                     agent any
-                    stages {
-                        stage("build") {
-                            steps {
-                                sh"echo 1"
-                            }
-                        }
-                        stage("deploy") {
-                            
-                             steps {
-                                sh"echo 1"
-                            }
-                        }
-                              stage("build1") {
-                            steps {
-                                sh"echo 1"
-                            }
-                        }
-                        stage("deploy1") {
-                            
-                             steps {
-                                sh"echo 1"
-                            }
-                        }
-                    }
-                   
-                }
-              
-            }
-             
+test["a"] = {
+    stage ("a") {
+        stage ("ab") {
+            sh "echo stage abc"
         }
-         stage('Run Tests') {
-            parallel {
-                stage('Test On Windows') {
-                  
-                    steps {
-                       sh "echo windows"
-                    }
-                   
-                }
-                stage('Test On Linux') {
-                   
-                    steps {
-                      sh "echo windows"
-                    }
-                    
-                }
-            }
-        }   
+        stage ("xyz") {
+            sh "echo stage xyz"
+        }
     }
+}
+
+test["b"] = {
+    stage ("b") {
+        stage ("bb") {
+            sh "echo stage bb"
+        }
+        stage ("bxz") {
+            sh "echo stagebxyz"
+        }
+    }
+}
+node {
+   //stage 'start'
+   parallel test
+   stage ('middle') {
+       sh "echo middle"
+   }
+   
+}
+node() {
+  stage('Build') {
+    println 'I prepare the build for the parallel steps'
+  }
+
+  stage('Test') {
+   parallel (
+ "win7-vs2012" : { stage("checkout") { }; stage("build") { }; stage("test") { } },
+ "win10-vs2015" : { stage("checkout") { }; stage("build") { }; stage("test") { }},
+ "linux-gcc5" : { stage("checkout") { }; stage("build") { }; stage("test") { } }
+)
+  }
 }
