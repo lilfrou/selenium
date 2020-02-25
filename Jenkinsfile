@@ -1,3 +1,6 @@
+pipeline {
+    agent any
+    stages{
 stage('Build') {
     parallel([
         build: {
@@ -61,4 +64,6 @@ stage('Archive') {
     }
     archive 'pkg/**/*'
     junit 'test_results/**/*.xml'
+}
+    }
 }
