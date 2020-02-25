@@ -1,75 +1,28 @@
 pipeline {
-     agent any
-
+    agent none
     stages {
-           
-        stage("Cron || Normal") {
+        stage('Parallel Stage') {
             parallel {
-                stage("windows") {
-                     agent any
-                    stages {
-                        stage("build") {
-                            steps {
-                                sh"echo 1"
-                            }
-                        }
-                        stage("deploy") {
-                           
-                            steps {
-                                sh"echo 1"
-                            }
+                stage('Stage 1') {
+                    steps {
+                        echo "Stage 1"
+                    }
+                }
+                stage('Stage 2') {
+                    steps {
+                        script {
+                            parallel (
+                                "Stage 2.1.": {
+                                    echo "Stage 2.1."
+                                },
+                                "Stage 2.2.": {
+                                    echo "Stage 2.2."
+                                }
+                            )
                         }
                     }
                 }
-                stage("linux") {
-                     agent any
-                    stages {
-                        stage("build") {
-                            steps {
-                                sh"echo 1"
-                            }
-                        }
-                        stage("deploy") {
-                            
-                             steps {
-                                sh"echo 1"
-                            }
-                        }
-                              stage("build1") {
-                            steps {
-                                sh"echo 1"
-                            }
-                        }
-                        stage("deploy1") {
-                            
-                             steps {
-                                sh"echo 1"
-                            }
-                        }
-                    }
-                   
-                }
-              
             }
-             
         }
-         stage('Run Tests') {
-            parallel {
-                stage('Test On Windows') {
-                  
-                    steps {
-                       sh "echo windows"
-                    }
-                   
-                }
-                stage('Test On Linux') {
-                   
-                    steps {
-                      sh "echo windows"
-                    }
-                    
-                }
-            }
-        }   
     }
 }
