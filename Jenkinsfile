@@ -38,7 +38,7 @@ pipeline {
      stages {  
          stage("build and deploy on Windows and Linux") {
             parallel {
-                stage("windows") {
+                stage("Crons") {
                      agent any
                     stages {
           stage('Cron'){
@@ -53,7 +53,7 @@ pipeline {
          }
                     }
                 }
-                 stage("linux") {
+                 stage("Main") {
                      agent any
                     stages {
          stage("Verify Mirror-ProD"){
