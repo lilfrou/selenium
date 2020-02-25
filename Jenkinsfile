@@ -16,8 +16,11 @@ pipeline {
                 }
             }
         
-                
+         stage("Crons"1) {
+                     agent any
+                    stages {        
         stage('Parallel Stage') {
+            
             parallel {
                 stage('Stage 1') {
                     steps {
@@ -33,6 +36,8 @@ pipeline {
                                 },
                                 "Stage 2.2.": {
                                     echo "Stage 2.2."
+                                }
+                                }
                                 }
                             )
                         }
