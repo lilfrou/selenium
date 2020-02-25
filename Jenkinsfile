@@ -20,7 +20,24 @@ pipeline {
                         }
                     }
                 }
-
+ parallel {
+                stage("windows2") {
+                     agent any
+                    stages {
+                        stage("build2") {
+                            steps {
+                                sh"echo 1"
+                            }
+                        }
+                        stage("deploy2") {
+                           
+                            steps {
+                                sh"echo 1"
+                            }
+                        }
+                    }
+                }
+ }
                 stage("linux") {
                      agent any
                     stages {
