@@ -19,7 +19,7 @@ pipeline {
                             }
                         }
                     }
-                }
+ stage("build and deploy on Windows and Linux21") {               
  parallel {
                 stage("windows2") {
                      agent any
