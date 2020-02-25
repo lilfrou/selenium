@@ -47,6 +47,11 @@ pipeline {
                         }
                     }
                 }
+                  stage("build45") {
+                            steps {
+                                sh"echo 1"
+                            }
+                        }
             }
         }
     }
