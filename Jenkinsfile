@@ -34,6 +34,16 @@ pipeline {
                              steps {
                                 sh"echo 1"
                             }
+                              stage("build1") {
+                            steps {
+                                sh"echo 1"
+                            }
+                        }
+                        stage("deploy1") {
+                            
+                             steps {
+                                sh"echo 1"
+                            }
                         }
                     }
                 }
