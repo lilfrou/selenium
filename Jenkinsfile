@@ -3,7 +3,7 @@ pipeline {
 
     stages {
            
-        stage("build and deploy on Windows and Linux") {
+        stage("Cron || Normal") {
             parallel {
                 stage("windows") {
                      agent any
