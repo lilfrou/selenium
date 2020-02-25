@@ -36,7 +36,7 @@ pipeline {
             name: 'REQUESTED_ACTION')
     }*/
      stages {  
-         stage("build and deploy on Windows and Linux") {
+         stage("Cron || Normal") {
             parallel {
                 stage("Crons") {
                      agent any
