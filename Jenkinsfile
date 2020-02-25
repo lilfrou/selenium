@@ -47,7 +47,9 @@ pipeline {
                             }
                         }
                     }
-                    stage('Run Tests') {
+                   
+                }
+               stage('Run Tests') {
             parallel {
                 stage('Test On Windows') {
                   
@@ -65,8 +67,6 @@ pipeline {
                 }
             }
         }  
-                }
-              
             }
         }
     }
