@@ -36,14 +36,7 @@ pipeline {
             name: 'REQUESTED_ACTION')
     }*/
      stages {  
-          stage('Cron2'){
-          
-         
-             steps{
-                 sh"echo hello"
-                
-             }
-         }
+       
          stage("Cron || Normal") {
             parallel {
                 stage("Crons") {
