@@ -165,7 +165,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                               post { 
         always {
             script{
-                if( (verif== "true")){
+                if(verif== "true"){
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "The Production environment is Back OnLine ${env.JOB_NAME}", 
                 body: " Please verify if every thing is working fine! \n\nhttp://192.168.1.100/ ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
@@ -175,7 +175,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
         }
               }                
                 }
-                    }
+                    
                  stage("Main") {
                      agent any
                     stages {
