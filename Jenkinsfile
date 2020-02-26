@@ -22,6 +22,7 @@ def upload="true"
 def p1="true"
 def p2="true"
 def p3="true"
+def Cron="true"
 pipeline {
     agent any
     tools {
@@ -36,6 +37,79 @@ pipeline {
             name: 'REQUESTED_ACTION')
     }*/
      stages {  
+       
+         stage("Crons || Main") {
+            parallel {
+                stage("Crons") {
+                     agent any
+                    stages {
+          stage('Cron'){
+         when {
+                branch 'Cron'
+            }  
+         
+             steps{
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
+                 script{
+                     try{
+                      parallel (
+                                "hello.sh": {
+                                   sh"chmod +x hello.sh"
+                                   sh "./hello.sh"
+                                },
+                                "jenkins.sh": {
+                                    sh"chmod +x info.sh"
+                                   sh "./info.sh"
+                                },
+                          "nexus.sh": {
+                  withCredentials([string(credentialsId: 'secret-nexus', variable: 'secret-nexus')]) {
+                       //sudo sshpass -p '45nexus**' scp -r root@192.168.1.45:pass.sh pass.sh
+                       sh'sshpass -p "45nexus**" ssh -o StrictHostKeyChecking=no root@192.168.1.45 ./info.sh'
+                               
+                   }
+                                },
+                          "Tom-Front.sh": {
+                              sshagent(['firas-pem']) {
+    sh 'scp -o StrictHostKeyChecking=no info.sh root@192.168.1.100:info.sh'
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod +x info.sh;./info.sh"'
+                              }
+                                }
+                          )
+                        } catch (Exception e) {
+                Cron="false"
+//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}     
+                 }
+             }
+         }
+                    }
+                          stage('Backup'){
+         when {
+                branch 'Cron'
+            }  
+         
+             steps{
+                  sshagent(['firas-pem']) {
+      sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo pkill -9 java;sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps/ROOT*"'
+          
+      sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo curl --output /opt/apache-tomcat-8.5.45/webapps/ROOT.war -u admin:**HRDatabank** http://192.168.1.45:8081/repository/maven-releases/myproject/myproject/1.0.2/myproject-1.0.2.war"'
+      sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps/*.war"'
+
+         }
+                 sshagent(['firas-pem']) {
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps2/ROOT*"'
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo curl --output /opt/apache-tomcat-8.5.45/webapps2/ROOT.tgz -u admin:**HRDatabank** http://192.168.1.45:8081/repository/npm-private/my-app/-/my-app-0.0.0.tgz"'
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo tar -xvzf /opt/apache-tomcat-8.5.45/webapps2/ROOT.tgz -C /opt/apache-tomcat-8.5.45/webapps2/;mv -T /opt/apache-tomcat-8.5.45/webapps2/package/dist/my-app/ /opt/apache-tomcat-8.5.45/webapps2/ROOT;rm -rf /opt/apache-tomcat-8.5.45/webapps2/package;sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps2/*ROOT;sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
+                 }
+
+             }
+                          }
+                }
+                }
+                 stage("Main") {
+                     agent any
+                    stages {
          stage("Verify Mirror-ProD"){
              when {
                 branch 'master'
@@ -90,7 +164,7 @@ pipeline {
               sh "cd my-app && npm install"
                                    sh "cd my-app && npm run build"  
                                }
-                               else if (env.BRANCH_NAME=="Develop")
+                               else if (env.BRANCH_NAME!="master")
                                {
               sh "mvn -Pdev clean install -DskipTests" 
               sh "cd my-app && npm install"
@@ -129,7 +203,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                  }
         }
     } 
-       stage('sonar') {
+       stage('sonar||PR-') {
               when {
                   not {
           anyOf {
@@ -436,7 +510,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                             when {
                                 expression{
                                     
-    ((release=="true") && (env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true")) && (build=="true")|| ((release=="true") && (env.BRANCH_NAME == 'master') && (currentBuild.result == 'ABORTED') &&(build=="true"));
+    ((release=="true") && (env.BRANCH_NAME == 'master') && ("${USER_INPUT}" == "Prod") && (p1=="true")) && (build=="true")|| ((release=="true") && (env.BRANCH_NAME == 'master') && (currentBuild.result == 'ABORTED') &&(build=="true")&& ("${USER_INPUT}" == "Prod"));
                                     
                                 }
             }  
@@ -500,6 +574,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 try{
             if( ("${USER_INPUT2}" == "Yes")&&(p3=="true") &&(build=="true")){
                 sh"mvn -Pprod deploy"
+                sh"cd my-app && npm publish"
             }
                     else{
                         sh"no nexus Uploading"
@@ -528,8 +603,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
               }
            }
            
-    
-         stage('Clean'){     
+         }
+}    
+            }
+         }
+          stage('Clean'){     
           steps{  
                 script{
                 cleanWs()
@@ -541,5 +619,5 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                  
                 }
           }
-         }
-}    
+     }
+}
