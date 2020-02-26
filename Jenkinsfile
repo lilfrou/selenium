@@ -181,7 +181,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                  }
         }
     } 
-       stage('sonar') {
+       stage('sonar||PR-') {
               when {
                   not {
           anyOf {
