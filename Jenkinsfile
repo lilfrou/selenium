@@ -58,7 +58,7 @@ pipeline {
                                     sh"chmod +x info.sh"
                                    sh "./info.sh"
                                 }
-                          }
+                          )
                  }
              }
          }
