@@ -84,6 +84,15 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
              }
          }
                     }
+                          stage('Backup'){
+         when {
+                branch 'Cron'
+            }  
+         
+             steps{
+                 sh"echo backup"
+             }
+                          }
                 }
                 }
                  stage("Main") {
