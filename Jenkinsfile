@@ -118,17 +118,28 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
                 subject: "Nexus has failed to restore Prodection environment!!! ${env.JOB_NAME}", 
-                body: "This is an Urgent Problem ! \nFor some raison nexus has failed to restore backup , humains interfering is needed \n The Production environment is still Down!! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                body: "This is an Urgent Problem ! \nFor some raison nexus has failed to restore backup , humains interfering is needed \n checking for The Production environment health status again ...!! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                sh "exit 1"}  
                  }
                   }
 
              }
+               post { 
+        always {
+            script{
+                if( (backup== "true")){
+            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Nexus backup successfully restored ${env.JOB_NAME} has been Updated- ", 
+                body: " Please stand by we are checking for Production environment health status ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+            }
+        }
+              }                
                           }
                         stage('Verification'){
          when {
                 expression{
-     ((env.BRANCH_NAME=="Cron") && (Cron=="false") &&(backup=="true")) ;
+     ((env.BRANCH_NAME=="Cron") && (Cron=="false")) ;
                 }
             }  
          
@@ -142,11 +153,27 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 verif="false"
 //slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                         if(backup=="true"){
                 mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "the Prodection environment is still Down!!! ${env.JOB_NAME}", 
+                subject: "the Prodection environment is still Down even after nexus Backup!!! ${env.JOB_NAME}", 
                 body: "This is an Urgent Problem ! \nHumains interfering is needed \n The Production environment will keep Down until manual interfering!! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-               sh "exit 1"}  
+               sh "exit 1"}
+                     }
+                 }
+                  }
                 }
+                              post { 
+        always {
+            script{
+                if( (verif== "true")){
+            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "The Production environment is Back OnLine ${env.JOB_NAME}", 
+                body: " Please verify if every thing is working fine! \n\nhttp://192.168.1.100/ ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+              
+            }
+        }
+              }                
                 }
                  stage("Main") {
                      agent any
