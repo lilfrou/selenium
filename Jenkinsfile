@@ -22,6 +22,7 @@ def upload="true"
 def p1="true"
 def p2="true"
 def p3="true"
+def Cron="true"
 pipeline {
     agent any
     tools {
@@ -48,7 +49,9 @@ pipeline {
             }  
          
              steps{
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
                  script{
+                     try{
                       parallel (
                                 "hello.sh": {
                                    sh"chmod +x hello.sh"
@@ -72,10 +75,16 @@ pipeline {
                               }
                                 }
                           )
+                        } catch (Exception e) {
+                Cron="false"
+//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}     
                  }
              }
          }
                     }
+                }
                 }
                  stage("Main") {
                      agent any
@@ -173,7 +182,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                  }
         }
     } 
-       stage('sonar') {
+       stage('sonar||PR-') {
               when {
                   not {
           anyOf {
