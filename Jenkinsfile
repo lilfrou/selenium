@@ -61,7 +61,7 @@ pipeline {
                           "nexus.sh": {
                    withCredentials([string(credentialsId: 'dockerhub', variable: 'secret-nexus')]) {
                        //sudo sshpass -p '45nexus**' scp -r root@192.168.1.45:pass.sh pass.sh
-                      sh'sshpass -p "45nexus**" ssh -o StrictHostKeyChecking=no root@192.168.1.45"pwd;sudo ./info.sh"'
+                      sh'sshpass -p "45nexus**" ssh -o StrictHostKeyChecking=no root@192.168.1.45'
                                
                    }
                                 },
