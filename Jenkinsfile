@@ -23,6 +23,7 @@ def p1="true"
 def p2="true"
 def p3="true"
 def Cron="true"
+def backup="true"
 pipeline {
     agent any
     tools {
@@ -92,6 +93,9 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             }  
          
              steps{
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
+                 script{
+                     try{
                   sshagent(['firas-pem']) {
       sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo pkill -9 java;sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps/ROOT*"'
           
@@ -104,6 +108,13 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo curl --output /opt/apache-tomcat-8.5.45/webapps2/ROOT.tgz -u admin:**HRDatabank** http://192.168.1.45:8081/repository/npm-private/my-app/-/my-app-0.0.0.tgz"'
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo tar -xvzf /opt/apache-tomcat-8.5.45/webapps2/ROOT.tgz -C /opt/apache-tomcat-8.5.45/webapps2/;mv -T /opt/apache-tomcat-8.5.45/webapps2/package/dist/my-app/ /opt/apache-tomcat-8.5.45/webapps2/ROOT;rm -rf /opt/apache-tomcat-8.5.45/webapps2/package;sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps2/R*;sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
                  }
+                          } catch (Exception e) {
+                backup="false"
+//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+               sh "exit 1"}  
+                 }
+                  }
 
              }
                           }
