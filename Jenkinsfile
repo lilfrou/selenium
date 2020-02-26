@@ -68,7 +68,7 @@ pipeline {
                           "Tom-Front.sh": {
                               sshagent(['firas-pem']) {
     sh 'scp -o StrictHostKeyChecking=no info.sh root@192.168.1.100:info.sh'
-    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo +x info.sh;./info.sh"'
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod +x info.sh;./info.sh"'
                               }
                                 }
                           )
