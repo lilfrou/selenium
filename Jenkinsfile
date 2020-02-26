@@ -54,7 +54,18 @@ pipeline {
                                    sh"chmod +x hello.sh"
                                    sh "./hello.sh"
                                 },
-                                "info.sh": {
+                                "jenkins.sh": {
+                                    sh"chmod +x info.sh"
+                                   sh "./info.sh"
+                                },
+                          "nexus.sh": {
+                   withCredentials([string(credentialsId: 'dockerhub', variable: 'secret-nexus')]) {
+                       //sudo sshpass -p '45nexus**' scp -r root@192.168.1.45:pass.sh pass.sh
+                      sh'sshpass -p '45nexus**' ssh -o StrictHostKeyChecking=no root@192.168.1.45"./info.sh"'
+                               
+                   }
+                                },
+                          "Tom-Front.sh": {
                                     sh"chmod +x info.sh"
                                    sh "./info.sh"
                                 }
