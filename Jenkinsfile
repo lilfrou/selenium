@@ -24,7 +24,7 @@ def p2="true"
 def p3="true"
 def Cron="true"
 def backup="true"
-def verif=="true"
+def verif="true"
 pipeline {
     agent any
     tools {
