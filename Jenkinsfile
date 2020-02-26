@@ -24,6 +24,7 @@ def p2="true"
 def p3="true"
 def Cron="true"
 def backup="true"
+def verif=="true"
 pipeline {
     agent any
     tools {
@@ -115,12 +116,36 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 backup="false"
 //slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
 slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Nexus has failed to restore Prodection environment!!! ${env.JOB_NAME}", 
+                body: "This is an Urgent Problem ! \nFor some raison nexus has failed to restore backup , humains interfering is needed \n The Production environment is still Down!! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                sh "exit 1"}  
                  }
                   }
 
              }
                           }
+                        stage('Verification'){
+         when {
+                expression{
+     ((env.BRANCH_NAME=="Cron") && (Cron=="false") &&(backup=="true")) ;
+                }
+            }  
+         
+             steps{
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
+                 script{
+                     try{
+                         sh"chmod +x hello.sh"
+                         sh "./hello.sh"
+                          } catch (Exception e) {
+                verif="false"
+//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "the Prodection environment is still Down!!! ${env.JOB_NAME}", 
+                body: "This is an Urgent Problem ! \nHumains interfering is needed \n The Production environment will keep Down until manual interfering!! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+               sh "exit 1"}  
                 }
                 }
                  stage("Main") {
