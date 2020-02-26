@@ -100,7 +100,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                  sshagent(['firas-pem']) {
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps2/ROOT*"'
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo curl --output /opt/apache-tomcat-8.5.45/webapps2/ROOT.tgz -u admin:**HRDatabank** http://192.168.1.45:8081/repository/npm-private/my-app/-/my-app-0.0.0.tgz"'
-    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo tar -xvzf /opt/apache-tomcat-8.5.45/webapps2/ROOT.tgz;cd /opt/apache-tomcat-8.5.45/webapps2 && mv -T package/dist/my-app/ ROOT;cd /opt/apache-tomcat-8.5.45/webapps2 && rm -rf package;sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps2/*ROOT;sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo tar -xvzf /opt/apache-tomcat-8.5.45/webapps2/ROOT.tgz -C /opt/apache-tomcat-8.5.45/webapps2/;mv -T /opt/apache-tomcat-8.5.45/webapps2/package/dist/my-app/ /opt/apache-tomcat-8.5.45/webapps2/ROOT;rm -rf /opt/apache-tomcat-8.5.45/webapps2/package;sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps2/*ROOT;sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
                  }
 
              }
