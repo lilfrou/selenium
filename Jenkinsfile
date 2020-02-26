@@ -86,7 +86,9 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                     }
                           stage('Backup'){
          when {
-                branch 'Cron'
+                expression{
+     ((env.BRANCH_NAME=="Cron") && (Cron=="false")) ;
+                }
             }  
          
              steps{
