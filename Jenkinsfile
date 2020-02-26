@@ -38,7 +38,7 @@ pipeline {
     }*/
      stages {  
        
-         stage("Cron || Normal") {
+         stage("Crons || Main") {
             parallel {
                 stage("Crons") {
                      agent any
