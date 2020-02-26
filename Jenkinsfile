@@ -59,15 +59,17 @@ pipeline {
                                    sh "./info.sh"
                                 },
                           "nexus.sh": {
-                   withCredentials([string(credentialsId: 'dockerhub', variable: 'secret-nexus')]) {
+                  withCredentials([string(credentialsId: 'secret-nexus', variable: 'secret-nexus')]) {
                        //sudo sshpass -p '45nexus**' scp -r root@192.168.1.45:pass.sh pass.sh
-                      sh'sshpass -p '45nexus**' ssh -o StrictHostKeyChecking=no root@192.168.1.45"./info.sh"'
+                       sh'sshpass -p "45nexus**" ssh -o StrictHostKeyChecking=no root@192.168.1.45 ./info.sh'
                                
                    }
                                 },
                           "Tom-Front.sh": {
-                                    sh"chmod +x info.sh"
-                                   sh "./info.sh"
+                              sshagent(['firas-pem']) {
+    sh 'scp -o StrictHostKeyChecking=no info.sh root@192.168.1.100:info.sh'
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod +x info.sh;./info.sh"'
+                              }
                                 }
                           )
                  }
