@@ -23,6 +23,9 @@ def p1="true"
 def p2="true"
 def p3="true"
 def Cron="true"
+def backup="true"
+def verif="true"
+def monitor="true"
 pipeline {
     agent any
     tools {
@@ -30,6 +33,9 @@ pipeline {
         jdk 'jdk'
         nodejs 'node' 
     }
+    triggers {
+    cron(env.BRANCH_NAME == 'Cron' ? 'H/5 * * * *' : '')
+  }
 /**parameters {
         choice(
             choices: ['greeting' , 'silence'],
@@ -52,12 +58,31 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
                  script{
                      try{
-                      parallel (
-                                "hello.sh": {
                                    sh"chmod +x hello.sh"
-                                   sh "./hello.sh"
-                                },
-                                "jenkins.sh": {
+                                   sh "./hello.sh" 
+                        } catch (Exception e) {
+                Cron="false"
+//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "PRoduction environement is DoWn !!! ${env.JOB_NAME}", 
+                body: "This is an Urgent Problem ! \nTrying to Restore backup from nexus! Please Stand by... \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+               sh "exit 1"}     
+                 }
+             }
+         }
+                    }
+                         stage('Monitoring'){
+         when {
+                branch 'Cron'
+            }  
+         
+             steps{
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
+                 script{
+                     try{
+                          parallel (
+                         "jenkins.sh": {
                                     sh"chmod +x info.sh"
                                    sh "./info.sh"
                                 },
@@ -75,21 +100,29 @@ pipeline {
                               }
                                 }
                           )
-                        } catch (Exception e) {
-                Cron="false"
-//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
-               sh "exit 1"}     
+                          } catch (Exception e) {
+                         monitor="false"
+ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                         mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "MOnitoring stage has some problem !!! ${env.JOB_NAME}", 
+                body: "This is an Urgent Problem ! \nPLease check the Problem source \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                     sh "exit 1"}
                  }
+                }
              }
-         }
-                    }
+                         }
+                         
                           stage('Backup'){
          when {
-                branch 'Cron'
+                expression{
+     ((env.BRANCH_NAME=="Cron") && (Cron=="false")) ;
+                }
             }  
          
              steps{
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
+                 script{
+                     try{
                   sshagent(['firas-pem']) {
       sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo pkill -9 java;sudo rm -Rf /opt/apache-tomcat-8.5.45/webapps/ROOT*"'
           
@@ -102,11 +135,79 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo curl --output /opt/apache-tomcat-8.5.45/webapps2/ROOT.tgz -u admin:**HRDatabank** http://192.168.1.45:8081/repository/npm-private/my-app/-/my-app-0.0.0.tgz"'
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo tar -xvzf /opt/apache-tomcat-8.5.45/webapps2/ROOT.tgz -C /opt/apache-tomcat-8.5.45/webapps2/;mv -T /opt/apache-tomcat-8.5.45/webapps2/package/dist/my-app/ /opt/apache-tomcat-8.5.45/webapps2/ROOT;rm -rf /opt/apache-tomcat-8.5.45/webapps2/package;sudo chmod -R 777 /opt/apache-tomcat-8.5.45/webapps2/R*;sudo /opt/apache-tomcat-8.5.45/bin/catalina.sh start &"'
                  }
+                          } catch (Exception e) {
+                backup="false"
+//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Nexus has failed to restore Prodection environment!!! ${env.JOB_NAME}", 
+                body: "This is an Urgent Problem ! \nFor some raison nexus has failed to restore backup , humains interfering is needed \n checking for The Production environment health status again ...!! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+               sh "exit 1"}  
+                 }
+                  }
 
              }
+               post { 
+        always {
+            script{
+                if( (backup== "true")){
+            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "Production environment has been restored from Nexus backup ${env.JOB_NAME}", 
+                body: " Please stand by we are checking for Production environment health status ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+            }
+        }
+              }                
+                          
+                        
                           }
+                        stage('Verification'){
+         when {
+                expression{
+     ((env.BRANCH_NAME=="Cron") && (Cron=="false")) ;
                 }
+            }  
+         
+             steps{
+                  catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
+                 script{
+                     try{
+                         sh"chmod +x hello.sh"
+                         sh "./hello.sh"
+                          } catch (Exception e) {
+                verif="false"
+//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                         if(backup=="true"){
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "the Prodection environment is still Down even after nexus Backup!!! ${env.JOB_NAME}", 
+                body: "This is an Urgent Problem ! \nHumains interfering is needed \n The Production environment will keep Down until manual interfering!! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+               sh "exit 1"}
+                         if(backup=="false"){
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "the Prodection environment is still Down!!! ${env.JOB_NAME}", 
+                body: "This is an Urgent Problem ! \nNexus backup has failed !! Humains interfering is needed \n The Production environment will keep Down until manual interfering for nexus!! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+               sh "exit 1"}
+                     }
+                 }
+                  }
                 }
+                              post { 
+        always {
+            script{
+                if(verif== "true"){
+            mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "The Production environment is Back OnLine ${env.JOB_NAME}", 
+                body: " Please verify if every thing is working fine! \n\nhttp://192.168.1.100/ ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+        }
+              
+            }
+        }
+              }                
+                }
+                          }
+                    }
+                    
                  stage("Main") {
                      agent any
                     stages {
@@ -613,7 +714,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 cleanWs()
                    
               
-  if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false"){
+  if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false" ||backup=="false" || verif=="false" || monitor=="false"){
                        currentBuild.result = 'FAILURE'  }
                     }
                  
