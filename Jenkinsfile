@@ -10,7 +10,7 @@ pipeline {
                                 allowMissing: false,
                                 alwaysLinkToLastBuild: false,
                                 keepAll: true,
-
+                                reportDir: '/var/lib/jenkins/workspace/dashboard-back_file-write',
                                 reportFiles: 'build.html',
                                 reportName: "monitor"
                                            ])
