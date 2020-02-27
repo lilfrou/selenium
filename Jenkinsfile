@@ -26,6 +26,7 @@ def Cron="true"
 def backup="true"
 def verif="true"
 def monitor="true"
+def jobBaseName
 pipeline {
     agent any
     tools {
@@ -84,7 +85,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                           parallel (
                          "jenkins.sh": {
                                     sh"chmod +x info.sh"
-                          def jobBaseName = sh(
+                           jobBaseName = sh(
     script: './info.sh',
     returnStdout: true,
   )
