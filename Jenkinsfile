@@ -136,7 +136,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
         }
               }                
                           
-                   /**     stage('Verification'){
+                        stage('Verification'){
          when {
                 expression{
      ((env.BRANCH_NAME=="Cron") && (Cron=="false")) ;
@@ -174,7 +174,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             }
         }
               }                
-                }*/
+                }
                           }
                           }
                     }
