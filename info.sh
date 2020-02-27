@@ -53,7 +53,7 @@ ping -c 1 google.com &> /dev/null && echo -e '\E[32m'"Internet: $tecreset Connec
 
 # Check OS Type
 os=$(uname -o)
-echo -e '\E[32m'"Operating System Type :" $tecreset $os
+#echo -e '\E[32m'"Operating System Type :" $tecreset $os
 
 # Check OS Release Version and Name
 cat /etc/os-release | grep 'NAME\|VERSION' | grep -v 'VERSION_ID' | grep -v 'PRETTY_NAME' > /tmp/osrelease
