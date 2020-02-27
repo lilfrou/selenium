@@ -32,6 +32,9 @@ pipeline {
         jdk 'jdk'
         nodejs 'node' 
     }
+    triggers {
+    cron(env.BRANCH_NAME == 'Cron' ? 'H/5 * * * *' : '')
+  }
 /**parameters {
         choice(
             choices: ['greeting' , 'silence'],
