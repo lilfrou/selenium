@@ -85,10 +85,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                           parallel (
                          "jenkins.sh": {
                                     sh"chmod +x info.sh"
-                           jobBaseName = sh("./info.sh",
+                                      def jobBaseName = sh(
+    script: "echo ./info.sh",
     returnStdout: true,
   )
-                             sh "echo Jenkins Monitor := \\\"${jobBaseName}\\\" >> build.html"
+                             sh "echo Jenkins Monitor := \\\"${jobBaseName}\\\" > build.html"
                                publishHTML (target: [
                                 allowMissing: false,
                                 alwaysLinkToLastBuild: false,
