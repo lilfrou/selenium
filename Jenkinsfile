@@ -3,6 +3,8 @@ pipeline {
     stages {
         stage('file write') {
             steps{
+                script {  
+                           try { 
                 sh "echo version := \\\"1.0.${env.BUILD_ID}\\\" >> build.html"
                 publishHTML (target: [
                                 allowMissing: false,
@@ -12,6 +14,8 @@ pipeline {
                                 reportFiles: 'build.html',
                                 reportName: "monitor"
                                            ])
+                               } catch (Exception e) {
+                           sh"echo fail"}
             }
         }
     }
