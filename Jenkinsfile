@@ -152,7 +152,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
             script{
                 if( (backup== "true")){
             mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "Nexus backup successfully restored ${env.JOB_NAME} has been Updated- ", 
+                subject: "Production environment has been restored from Nexus backup ${env.JOB_NAME}", 
                 body: " Please stand by we are checking for Production environment health status ! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
         }
             }
