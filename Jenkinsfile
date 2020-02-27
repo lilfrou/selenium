@@ -89,6 +89,13 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
     returnStdout: true,
   )
                              sh "echo Jenkins Monitor := \\\"${jobBaseName}\\\" >> build.html"
+                               publishHTML (target: [
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: '/var/lib/jenkins/workspace/dashboard-back_Cron',
+                                reportFiles: 'build.html',
+                                reportName: "monitor"
        
                                 },
                           "nexus.sh": {
