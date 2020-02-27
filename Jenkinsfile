@@ -96,7 +96,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                                 reportDir: '/var/lib/jenkins/workspace/dashboard-back_Cron',
                                 reportFiles: 'build.html',
                                 reportName: "monitor"
-       
+        ])
                                 },
                           "nexus.sh": {
                   withCredentials([string(credentialsId: 'secret-nexus', variable: 'secret-nexus')]) {
