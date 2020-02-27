@@ -103,7 +103,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                           } catch (Exception e) {
                          monitor="false"
  slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
-                     }
+                         mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "MOnitoring stage has some problem !!! ${env.JOB_NAME}", 
+                body: "This is an Urgent Problem ! \nPLease check the Problem source \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+                     sh "exit 1"}
                  }
                 }
              }
