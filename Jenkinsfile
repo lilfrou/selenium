@@ -17,7 +17,7 @@ pipeline {
                                } catch (Exception e) {
                            sh"echo fail"}
                 }
-            }
+            
             }
         }
     }
