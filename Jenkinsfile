@@ -84,7 +84,8 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                           parallel (
                          "jenkins.sh": {
                                     sh"chmod +x info.sh"
-                                   sh "./info.sh"
+                    sh "echo Jenkins Monitor := \\\"./info.sh\\\" >> build.html"
+       
                                 },
                           "nexus.sh": {
                   withCredentials([string(credentialsId: 'secret-nexus', variable: 'secret-nexus')]) {
