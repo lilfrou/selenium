@@ -160,6 +160,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 subject: "the Prodection environment is still Down even after nexus Backup!!! ${env.JOB_NAME}", 
                 body: "This is an Urgent Problem ! \nHumains interfering is needed \n The Production environment will keep Down until manual interfering!! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
                sh "exit 1"}
+                         if(backup=="false"){
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "the Prodection environment is still Down!!! ${env.JOB_NAME}", 
+                body: "This is an Urgent Problem ! \nNexus backup has failed !! Humains interfering is needed \n The Production environment will keep Down until manual interfering for nexus!! \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+               sh "exit 1"}
                      }
                  }
                   }
