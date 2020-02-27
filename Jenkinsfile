@@ -26,7 +26,7 @@ def Cron="true"
 def backup="true"
 def verif="true"
 def monitor="true"
-def jobBaseName
+
 pipeline {
     agent any
     tools {
