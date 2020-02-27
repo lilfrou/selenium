@@ -84,8 +84,11 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                           parallel (
                          "jenkins.sh": {
                                     sh"chmod +x info.sh"
-                            def info=sh"./info.sh" 
-                             sh "echo Jenkins Monitor := \\\"${info}\\\" >> build.html"
+                          def jobBaseName = sh(
+    script: "echo ./info.sh",
+    returnStdout: true,
+  )
+                             sh "echo Jenkins Monitor := \\\"${jobBaseName}\\\" >> build.html"
        
                                 },
                           "nexus.sh": {
