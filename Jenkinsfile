@@ -25,6 +25,7 @@ def p3="true"
 def Cron="true"
 def backup="true"
 def verif="true"
+def monitor="true"
 pipeline {
     agent any
     tools {
@@ -57,12 +58,31 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
                  script{
                      try{
-                      parallel (
-                                "hello.sh": {
                                    sh"chmod +x hello.sh"
-                                   sh "./hello.sh"
-                                },
-                                "jenkins.sh": {
+                                   sh "./hello.sh" 
+                        } catch (Exception e) {
+                Cron="false"
+//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
+                subject: "PRoduction environement is DoWn !!! ${env.JOB_NAME}", 
+                body: "This is an Urgent Problem ! \nTrying to Restore backup from nexus! Please Stand by... \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
+               sh "exit 1"}     
+                 }
+             }
+         }
+                    }
+                         stage('Monitoring'){
+         when {
+                branch 'Cron'
+            }  
+         
+             steps{
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
+                 script{
+                     try{
+                          parallel (
+                         "jenkins.sh": {
                                     sh"chmod +x info.sh"
                                    sh "./info.sh"
                                 },
@@ -80,18 +100,15 @@ pipeline {
                               }
                                 }
                           )
-                        } catch (Exception e) {
-                Cron="false"
-//slackSend (color: '#000000',channel:'#dashbord_backend_feedback', message: "STARTED: Job '${env.BRANCH_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
-                mail to: 'mhennifiras100@gmail.com', from: 'jenkinshr6@gmail.com',
-                subject: "PRoduction environement is DoWn !!! ${env.JOB_NAME}", 
-                body: "This is an Urgent Problem ! \nTrying to Restore backup from nexus! Please Stand by... \n\nView the log at:\n ${env.BUILD_URL}\n\nBlue Ocean:\n${env.RUN_DISPLAY_URL}"
-               sh "exit 1"}     
+                          } catch (Exception e) {
+                         monitor="false"
+ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${env.STAGE_NAME} STAGE FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'")
+                     }
                  }
+                }
              }
-         }
-                    }
+                         }
+                         
                           stage('Backup'){
          when {
                 expression{
@@ -694,7 +711,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                 cleanWs()
                    
               
-  if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false" ||backup=="false" || verif=="false"){
+  if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false" ||backup=="false" || verif=="false" || monitor=="false"){
                        currentBuild.result = 'FAILURE'  }
                     }
                  
