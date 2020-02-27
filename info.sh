@@ -94,20 +94,22 @@ who>/tmp/who
 echo -e "<span style='color:#008000'>Logged In users :</span>" $tecreset && cat /tmp/who
 echo -e  '<br><br>'
 # Check RAM and SWAP Usages
-free -h | grep -v + > /tmp/ramcache
-echo -e "<span style='color:#008000'>Ram Usages :</span>" $tecreset '<br><br>'
+free -h | column -t | sed 's:$:<br/>:;s:  *:</td><td>:;s:.*:<tr><td>&</td></tr>:'| grep -v + > /tmp/ramcache
+echo -e "<span style='color:#008000'>Ram Usages :</span>" $tecreset '<br><br>''<table  border="1" >'
 cat /tmp/ramcache | grep -v "Swap"
-echo -e  '<br><br>'
-echo -e "<span style='color:#008000'>Swap Usages :</span>" $tecreset '<br><br>'
+echo -e '</table>'
+echo -e  '<br>'
+echo -e "<span style='color:#008000'>Swap Usages :</span>" $tecreset '<br><br>''<table  border="1" >'
 cat /tmp/ramcache | grep -v "Mem"
-echo -e  '<br><br>'
+echo -e '</table>'
+echo -e  '<br>'
 
 # Check Disk Usages
 df -h | column -t | sed 's:$:<br/>:;s:  *:</td><td>:;s:.*:<tr><td>&</td></tr>:'| grep 'Filesystem\|/dev/*' > /tmp/diskusage
 echo -e "<span style='color:#008000'>Disk Usages :</span>" $tecreset  '<br><br>' '<table  border="1" >'
 cat /tmp/diskusage 
 echo -e '</table>'
-
+echo -e  '<br>'
 # Check Load Average
 loadaverage=$(top -n 1 -b | grep "load average:" | awk '{print $10 $11 $12}')
 echo -e "<span style='color:#008000'>Load Average :</span>" $tecreset $loadaverage '<br><br>'
