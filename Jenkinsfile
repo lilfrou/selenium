@@ -73,7 +73,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
              }
          }
                     }
-                         stage('Monitoring'){
+                        /** stage('Monitoring'){
          when {
                 branch 'Cron'
             }  
@@ -87,7 +87,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                                     sh"chmod +x info.sh"
         
                              sh "./info.sh > build.html"
-    sh"cp -r /var/lib/jenkins/workspace/dashboard-back_Cron*/build.html /var/lib/jenkins/workspace/dashboard-back_Cron"
+    sh"cp -r /var/lib/jenkins/workspace/dashboard-back_Cron*//**build.html /var/lib/jenkins/workspace/dashboard-back_Cron"
                                publishHTML (target: [
                                 allowMissing: false,
                                 alwaysLinkToLastBuild: false,
@@ -121,7 +121,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                  }
                 }
              }
-                         }
+                         }*/
                          
                           stage('Backup'){
          when {
