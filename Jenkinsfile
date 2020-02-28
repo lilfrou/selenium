@@ -31,7 +31,6 @@ pipeline {
     agent {
     node {
         label 'maître'
-        customWorkspace '/var/lib/jenkins/workspace'
     }
 }
     tools {
@@ -56,7 +55,6 @@ pipeline {
                      agent {
     node {
         label 'maître'
-        customWorkspace '/var/lib/jenkins/workspace'
     }
 }
                     stages {
@@ -233,7 +231,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                       agent {
     node {
         label 'maître'
-        customWorkspace '/var/lib/jenkins/workspace'
+      
     }
 }
                     stages {
