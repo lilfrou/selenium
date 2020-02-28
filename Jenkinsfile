@@ -730,8 +730,8 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
 
                    cleanWs()
                   try{
-                   if(env.BRANCH_NAME == 'Cron'){
-                       sh"rm -rf /var/lib/jenkins/workspace/dashboard-back_${env.BRANCH_NAME}*"}
+                    env.BRANCH_NAME == 'Cron'
+                       sh"rm -rf /var/lib/jenkins/workspace/dashboard-back_${env.BRANCH_NAME}*"
                     
               } catch (Exception e) {cleanWs() 
                                      sh "echo :p"}
