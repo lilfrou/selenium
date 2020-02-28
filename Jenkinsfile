@@ -91,7 +91,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                                 allowMissing: false,
                                 alwaysLinkToLastBuild: false,
                                 keepAll: true,
-                                reportDir: '/var/lib/jenkins/workspace/dashboard-back_Cron@4',
+                                reportDir: '/var/lib/jenkins/workspace/*',
                                 reportFiles: 'build.html',
                                 reportName: "monitor"
         ])
