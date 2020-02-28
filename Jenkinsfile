@@ -103,14 +103,14 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                           "nexus.sh": {
                   withCredentials([string(credentialsId: 'secret-nexus', variable: 'secret-nexus')]) {
                        //sudo sshpass -p '45nexus**' scp -r root@192.168.1.45:pass.sh pass.sh
-                       sh'sshpass -p "45nexus**" ssh -o StrictHostKeyChecking=no root@192.168.1.45 ./info.sh'
+                       sh'sshpass -p "45nexus**" ssh -o StrictHostKeyChecking=no root@192.168.1.45 ./info.sh > build1.html'
                                
                    }
                                 },
                           "Tom-Front.sh": {
                               sshagent(['firas-pem']) {
     sh 'scp -o StrictHostKeyChecking=no info.sh root@192.168.1.100:info.sh'
-    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod +x info.sh;./info.sh"'
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod +x info.sh;./info.sh > build2.html"'
                               }
                                 }
                           )
