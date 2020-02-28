@@ -26,7 +26,7 @@ def Cron="true"
 def backup="true"
 def verif="true"
 def monitor="true"
-
+def path
 pipeline {
     agent any
     tools {
@@ -56,8 +56,11 @@ pipeline {
             }  
          
              steps{
+                
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
                  script{
+                      path="/var/lib/jenkins/workspace/${env.BRANCH_NAME}"
+                 sh"echo ${path}"
                      try{
                                    sh"chmod +x hello.sh"
                                    sh "./hello.sh" 
@@ -727,8 +730,8 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
 
                    cleanWs()
                   try{
-                   if(env.BRANCH_NAME == 'Cron'){
-                        sh"rm -rf /var/lib/jenkins/workspace/dashboard-back_Cron*"}
+                    env.BRANCH_NAME == 'Cron'
+                       sh"rm -rf /var/lib/jenkins/workspace/dashboard-back_${env.BRANCH_NAME}*"
                     
               } catch (Exception e) {cleanWs() 
                                      sh "echo :p"}
