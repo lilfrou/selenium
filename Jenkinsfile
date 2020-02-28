@@ -53,7 +53,12 @@ pipeline {
          stage("Crons || Main") {
             parallel {
                 stage("Crons") {
-                     agent any
+                     agent {
+    node {
+        label 'maître'
+        customWorkspace '/var/lib/jenkins/workspace'
+    }
+}
                     stages {
           stage('Cron'){
          when {
@@ -225,7 +230,12 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                     }
                     
                  stage("Main") {
-                     agent any
+                      agent {
+    node {
+        label 'maître'
+        customWorkspace '/var/lib/jenkins/workspace'
+    }
+}
                     stages {
          stage("Verify Mirror-ProD"){
              when {
