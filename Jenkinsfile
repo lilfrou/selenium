@@ -215,6 +215,13 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
         }
               }                
                 }
+                         stage('Clean1'){     
+          steps{  
+                script{
+                cleanWs()
+                }
+          }
+                         }
                           }
                     }
                     
