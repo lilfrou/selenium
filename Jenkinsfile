@@ -724,13 +724,10 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
               script{
   if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false" ||backup=="false" || verif=="false" || monitor=="false"){
                        currentBuild.result = 'FAILURE'  }
-               
-                    if(env.BRANCH_NAME == 'Cron'){
-                        sh"rm -rf /var/lib/jenkins/workspace/dashboard-back_Cron@*"}
-                        
-                    
+
                    cleanWs()
-                  
+                   if(env.BRANCH_NAME == 'Cron'){
+                        sh"rm -rf /var/lib/jenkins/workspace/dashboard-back_Cron@*"}
                     }
                  
                 }
