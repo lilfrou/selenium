@@ -26,7 +26,7 @@ def Cron="true"
 def backup="true"
 def verif="true"
 def monitor="true"
-
+def path
 pipeline {
     agent any
     tools {
@@ -59,6 +59,7 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
                  script{
                      try{
+                         path="${pwd}"
                                    sh"chmod +x hello.sh"
                                    sh "./hello.sh" 
                         } catch (Exception e) {
