@@ -56,10 +56,11 @@ pipeline {
             }  
          
              steps{
-                 path="/var/lib/jenkins/workspace/${env.BRANCH_NAME}"
-                 sh"echo ${path}"
+                
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
                  script{
+                      path="/var/lib/jenkins/workspace/${env.BRANCH_NAME}"
+                 sh"echo ${path}"
                      try{
                                    sh"chmod +x hello.sh"
                                    sh "./hello.sh" 
