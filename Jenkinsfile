@@ -28,11 +28,7 @@ def verif="true"
 def monitor="true"
 
 pipeline {
-    agent {
-    node {
-        label 'maître'
-    }
-}
+    agent any
     tools {
         maven 'maven3.6.1'
         jdk 'jdk'
@@ -52,11 +48,7 @@ pipeline {
          stage("Crons || Main") {
             parallel {
                 stage("Crons") {
-                     agent {
-    node {
-        label 'maître'
-    }
-}
+                     agent any
                     stages {
           stage('Cron'){
          when {
@@ -81,7 +73,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
              }
          }
                     }
-                        /** stage('Monitoring'){
+                         stage('Monitoring'){
          when {
                 branch 'Cron'
             }  
@@ -95,7 +87,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                                     sh"chmod +x info.sh"
         
                              sh "./info.sh > build.html"
-    sh"cp -r /var/lib/jenkins/workspace/dashboard-back_Cron*//**build.html /var/lib/jenkins/workspace/dashboard-back_Cron"
+    sh"cp -r /var/lib/jenkins/workspace/dashboard-back_Cron*/build.html /var/lib/jenkins/workspace/dashboard-back_Cron"
                                publishHTML (target: [
                                 allowMissing: false,
                                 alwaysLinkToLastBuild: false,
@@ -129,7 +121,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                  }
                 }
              }
-                         }*/
+                         }
                          
                           stage('Backup'){
          when {
@@ -228,12 +220,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                     }
                     
                  stage("Main") {
-                      agent {
-    node {
-        label 'maître'
-      
-    }
-}
+                     agent any
                     stages {
          stage("Verify Mirror-ProD"){
              when {
@@ -738,8 +725,13 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
   if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false" ||backup=="false" || verif=="false" || monitor=="false"){
                        currentBuild.result = 'FAILURE'  }
 
- cleanWs()
-                 
+                   cleanWs()
+                  try{
+                   if(env.BRANCH_NAME == 'Cron'){
+                        sh"rm -rf /var/lib/jenkins/workspace/dashboard-back_Cron*"}
+                    
+              } catch (Exception e) {cleanWs() 
+                                     sh "echo :p"}
               }
                 }
           }
