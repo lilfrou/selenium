@@ -91,7 +91,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                                 allowMissing: false,
                                 alwaysLinkToLastBuild: false,
                                 keepAll: true,
-                                reportDir: '/var/lib/jenkins/workspace/dashboard-back_Cron*',
+                                reportDir: '/var/lib/jenkins/workspace/dashboard-back_Cron@4',
                                 reportFiles: 'build.html',
                                 reportName: "monitor"
         ])
@@ -215,13 +215,6 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
         }
               }                
                 }
-                         stage('Clean1'){     
-          steps{  
-                script{
-                cleanWs()
-                }
-          }
-                         }
                           }
                     }
                     
