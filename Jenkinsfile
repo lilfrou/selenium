@@ -729,7 +729,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                   try{
                    if(env.BRANCH_NAME == 'Cron'){
                         sh"rm -rf /var/lib/jenkins/workspace/dashboard-back_Cron*"}
-                    }
+                    
               } catch (Exception e) {sh "echo :p"}
                 }
           }
