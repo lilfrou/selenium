@@ -30,7 +30,6 @@ def monitor="true"
 pipeline {
     agent {
     node {
-        label 'maître'
         customWorkspace '/var/lib/jenkins/workspace'
     }
 }
