@@ -103,7 +103,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                   withCredentials([string(credentialsId: 'secret-nexus', variable: 'secret-nexus')]) {
                        //sudo sshpass -p '45nexus**' scp -r root@192.168.1.45:pass.sh pass.sh
                        sh 'sshpass -p "45nexus**" ssh -o StrictHostKeyChecking=no root@192.168.1.45 "./info.sh > build1.html"'
- sh ' sshpass -p "45nexus**" scp -o StrictHostKeyChecking=no root@192.168.1.45:/root/build2.html /var/lib/jenkins/workspace/dashboard-back_Cron/build1.html '
+ sh ' sshpass -p "45nexus**" scp -o StrictHostKeyChecking=no root@192.168.1.45:/root/build1.html /var/lib/jenkins/workspace/dashboard-back_Cron/build1.html '
                       
            publishHTML (target: [
                                 allowMissing: false,
