@@ -28,7 +28,7 @@ def verif="true"
 def monitor="true"
 def path
 pipeline {
-    agent none
+    agent any
     tools {
         maven 'maven3.6.1'
         jdk 'jdk'
@@ -48,7 +48,7 @@ pipeline {
          stage("Crons || Main") {
             parallel {
                 stage("Crons") {
-                     agent none
+                     agent any
                     stages {
           stage('Cron'){
          when {
@@ -56,10 +56,11 @@ pipeline {
             }  
          
              steps{
+                 path="/var/lib/jenkins/workspace/${env.BRANCH_NAME}"
+                 sh"echo ${path}"
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { 
                  script{
                      try{
-                         path="${pwd}"
                                    sh"chmod +x hello.sh"
                                    sh "./hello.sh" 
                         } catch (Exception e) {
@@ -221,7 +222,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                     }
                     
                  stage("Main") {
-                     agent none
+                     agent any
                     stages {
          stage("Verify Mirror-ProD"){
              when {
