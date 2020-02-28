@@ -104,7 +104,14 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                        //sudo sshpass -p '45nexus**' scp -r root@192.168.1.45:pass.sh pass.sh
                        sh'sshpass -p "45nexus**" ssh -o StrictHostKeyChecking=no root@192.168.1.45 ./info.sh > build1.html'
  sh'curl --output /var/lib/jenkins/workspace/dashboard-back_Cron/build2.html -u root:45nexus** http://192.168.1.45:8081/root/build2.html'
-                               
+           publishHTML (target: [
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: '/var/lib/jenkins/workspace/dashboard-back_Cron',
+                                reportFiles: 'build2.html',
+                                reportName: "monitor2"
+        ])                     
                    }
                                 },
                           "Tom-Front.sh": {
