@@ -722,7 +722,9 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
           stage('Clean'){     
           steps{  
                 script{
-                    sh"rm -rf /var/lib/jenkins/workspace/dashboard-back_Cron*"
+                    if(env.BRANCH_NAME == 'Cron'){
+                        sh"rm -rf /var/lib/jenkins/workspace/dashboard-back_Cron@*"
+                    }
                    cleanWs()
               
   if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false" ||backup=="false" || verif=="false" || monitor=="false"){
