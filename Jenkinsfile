@@ -738,7 +738,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
   if(build=="false" || test=="false" ||  javadoc=="false" || analyse=="false" || selenium=="false" || deploy=="false" || release=="false" || upload=="false" ||backup=="false" || verif=="false" || monitor=="false"){
                        currentBuild.result = 'FAILURE'  }
 
- 
+ cleanWs()
                  
               }
                 }
