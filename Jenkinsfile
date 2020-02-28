@@ -28,7 +28,12 @@ def verif="true"
 def monitor="true"
 
 pipeline {
-    agent any
+    agent {
+    node {
+        label 'master1'
+        customWorkspace '/var/lib/jenkins/workspace'
+    }
+}
     tools {
         maven 'maven3.6.1'
         jdk 'jdk'
