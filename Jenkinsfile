@@ -747,7 +747,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
 
                    cleanWs()
                   try{
-                  
+
                        sh"rm -rf /var/lib/jenkins/workspace/dashboard-back_${env.BRANCH_NAME}*"
                     
               } catch (Exception e) {cleanWs() 
