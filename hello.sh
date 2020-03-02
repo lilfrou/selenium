@@ -1,7 +1,7 @@
 #!/bin/bash
 url='http://192.168.1.100/'
 attempts=5
-timeout=5
+timeout=20
 online=false
 echo "Checking status of $url."
 for (( i=1; i<=$attempts; i++ ))
