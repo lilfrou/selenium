@@ -96,7 +96,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                                 keepAll: true,
                                 reportDir: '/var/lib/jenkins/workspace/dashboard-back_Cron',
                                 reportFiles: 'build.html',
-                                reportName: "monitor"
+                                reportName: "monitor-jenkins"
         ])
                                 },
                           "nexus.sh": {
@@ -111,7 +111,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                                 keepAll: true,
                                 reportDir: '/var/lib/jenkins/workspace/dashboard-back_Cron',
                                 reportFiles: 'build1.html',
-                                reportName: "monitor2"
+                                reportName: "monitor-nexus"
         ])                     
                    }
                                 },
@@ -126,7 +126,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                                 keepAll: true,
                                 reportDir: '/var/lib/jenkins/workspace/dashboard-back_Cron',
                                 reportFiles: 'build2.html',
-                                reportName: "monitor2"
+                                reportName: "monitor-prod"
         ])                     
                               }
                                 }
