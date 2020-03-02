@@ -1,10 +1,10 @@
 echo " "
 echo " "
-HOSTNAME=`hostname`
-PSQL="/opt/PostgreSQL/9.3/bin/psql"
+HOSTNAME=`visamane`
+#PSQL="/opt/PostgreSQL/9.3/bin/psql"
 PORT=5432
 HOST="localhost"
-DB="template1"
+DB="postgres
 USER="postgres"
 echo "Enter the Time in minutes ,For example if you give 10 means script will displayed what are the query is running more than 10 minutes";
 read time
