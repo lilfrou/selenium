@@ -87,8 +87,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                      try{
                           parallel (
                          "jenkins.sh": {
-                                    sh"chmod +x info.sh"
-        
+                             sh"chmod +x info.sh"
                              sh "./info.sh > build.html"
     sh"cp -r /var/lib/jenkins/workspace/dashboard-back_Cron*/build.html /var/lib/jenkins/workspace/dashboard-back_Cron"
                                publishHTML (target: [
@@ -97,20 +96,38 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                                 keepAll: true,
                                 reportDir: '/var/lib/jenkins/workspace/dashboard-back_Cron',
                                 reportFiles: 'build.html',
-                                reportName: "monitor"
+                                reportName: "monitor-jenkins"
         ])
                                 },
                           "nexus.sh": {
                   withCredentials([string(credentialsId: 'secret-nexus', variable: 'secret-nexus')]) {
                        //sudo sshpass -p '45nexus**' scp -r root@192.168.1.45:pass.sh pass.sh
-                       sh'sshpass -p "45nexus**" ssh -o StrictHostKeyChecking=no root@192.168.1.45 ./info.sh'
-                               
+ sh 'sshpass -p "45nexus**" ssh -o StrictHostKeyChecking=no root@192.168.1.45 "./info.sh > build1.html"'
+ sh ' sshpass -p "45nexus**" scp -o StrictHostKeyChecking=no root@192.168.1.45:/root/build1.html /var/lib/jenkins/workspace/dashboard-back_Cron/build1.html '
+                      
+           publishHTML (target: [
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: '/var/lib/jenkins/workspace/dashboard-back_Cron',
+                                reportFiles: 'build1.html',
+                                reportName: "monitor-nexus"
+        ])                     
                    }
                                 },
                           "Tom-Front.sh": {
                               sshagent(['firas-pem']) {
     sh 'scp -o StrictHostKeyChecking=no info.sh root@192.168.1.100:info.sh'
-    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod +x info.sh;./info.sh"'
+    sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod +x info.sh;./info.sh > build2.html"'
+    sh 'scp -o StrictHostKeyChecking=no root@192.168.1.100:/root/build2.html /var/lib/jenkins/workspace/dashboard-back_Cron/build2.html'
+                               publishHTML (target: [
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: '/var/lib/jenkins/workspace/dashboard-back_Cron',
+                                reportFiles: 'build2.html',
+                                reportName: "monitor-prod"
+        ])                     
                               }
                                 }
                           )
@@ -730,7 +747,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
 
                    cleanWs()
                   try{
-                  
+
                        sh"rm -rf /var/lib/jenkins/workspace/dashboard-back_${env.BRANCH_NAME}*"
                     
               } catch (Exception e) {cleanWs() 
