@@ -119,7 +119,7 @@ slackSend (color: '#C60800',channel:'#dashbord_backend_feedback', message: "${en
                               sshagent(['firas-pem']) {
     sh 'scp -o StrictHostKeyChecking=no info.sh root@192.168.1.100:info.sh'
     sh 'ssh -o StrictHostKeyChecking=no root@192.168.1.100 "sudo chmod +x info.sh;./info.sh > build2.html"'
-    sh 'scp -o StrictHostKeyChecking=no info.sh root@192.168.1.100:/root/build2.html /var/lib/jenkins/workspace/dashboard-back_Cron/build2.html'
+    sh 'scp -o StrictHostKeyChecking=no root@192.168.1.100:/root/build2.html /var/lib/jenkins/workspace/dashboard-back_Cron/build2.html'
                                publishHTML (target: [
                                 allowMissing: false,
                                 alwaysLinkToLastBuild: false,
