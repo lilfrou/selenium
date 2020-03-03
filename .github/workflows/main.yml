@@ -14,4 +14,4 @@ jobs:
     - name: Run a multi-line script
       run: |
         mvn clean 
-        mvn package
+        mvn deploy -Dregistry=https://maven.pkg.github.com/lilfrou -Dtoken=GH_TOKEN
