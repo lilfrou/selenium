@@ -14,4 +14,4 @@ jobs:
     - name: Run a multi-line script
       run: |
         mvn clean 
-        mvn install
+        mvn package
